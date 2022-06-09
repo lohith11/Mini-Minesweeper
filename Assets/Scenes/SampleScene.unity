@@ -148,7 +148,7 @@ MonoBehaviour:
   power: 3
   minPower: {x: -3, y: -3}
   maxPower: {x: 5, y: 5}
-  airDrag: 2
+  airDrag: 1
 --- !u!120 &9018935
 LineRenderer:
   m_ObjectHideFlags: 0
