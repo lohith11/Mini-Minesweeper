@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField] int gridSize;
+    LevelGeneration levelGenerationInstance;
+    void Awake()
+    {
+        levelGenerationInstance = FindObjectOfType<LevelGeneration>();
+    }
     void Start()
     {
-        FindObjectOfType<LevelGeneration>().GenerateLevel(5,5);
+        Cell[,] level = levelGenerationInstance.GenerateLevel(gridSize, gridSize);
+        level = levelGenerationInstance.SetNeighbours(level);
+        levelGenerationInstance.SetTiles(level);
     }
 }

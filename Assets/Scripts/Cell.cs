@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Cell
 {
-    int xCoordinate, yCoordinate, neighbours=0;
+    int xCoordinate, yCoordinate, neighbours = 0;
     bool hasBomb;
     public Cell(int x, int y)
     {
         xCoordinate = x;
         yCoordinate = y;
-        Debug.Log("Cell created");
     }
 
     public Vector2 GetCoordinates()
@@ -31,5 +30,10 @@ public class Cell
     public void AddNeighbour()
     {
         neighbours++;
+    }
+
+    public int GetNeighbours()
+    {
+        return neighbours;
     }
 }
