@@ -48,7 +48,7 @@ public class LevelGeneration : MonoBehaviour
                             else if (i + x < 0 || i + x >= level.GetLength(0) || j + y < 0 || j + y >= level.GetLength(1))
                                 continue;
                             else if (level[i + x, j + y].HasBomb())
-                                level[i, j].AddNeighbour();
+                                level[i, j].AddNeighbour(1);
                         }
                     }
                 }
@@ -71,6 +71,7 @@ public class LevelGeneration : MonoBehaviour
             for (int j = 0; j < level.GetLength(1); j++)
             {
                 GameObject tile = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
+                //tile.GetComponent<Cell>().SetCoordinates(i, j);
                 if (level[i, j].HasBomb())
                 {
                     tile.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;

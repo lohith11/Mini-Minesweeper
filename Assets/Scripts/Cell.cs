@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cell
+public class Cell : MonoBehaviour
 {
     int xCoordinate, yCoordinate, neighbours = 0;
     bool hasBomb;
@@ -17,6 +17,12 @@ public class Cell
         return new Vector2(xCoordinate, yCoordinate);
     }
 
+    public void SetCoordinates(int x, int y)
+    {
+        xCoordinate = x;
+        yCoordinate = y;
+    }
+
     public bool HasBomb()
     {
         return hasBomb;
@@ -27,9 +33,9 @@ public class Cell
         hasBomb = true;
     }
 
-    public void AddNeighbour()
+    public void AddNeighbour(int n)
     {
-        neighbours++;
+        neighbours += n;
     }
 
     public int GetNeighbours()
