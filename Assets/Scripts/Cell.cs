@@ -2,19 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cell : MonoBehaviour
+public class Cell
 {
     int xCoordinate, yCoordinate, neighbours = 0;
-    bool hasBomb;
+    bool hasBomb = false, isRevealed = false;
     public Cell(int x, int y)
     {
         xCoordinate = x;
         yCoordinate = y;
     }
 
-    public Vector2 GetCoordinates()
+    public Vector2Int Coordinates
     {
-        return new Vector2(xCoordinate, yCoordinate);
+        get { return new Vector2Int(xCoordinate, yCoordinate); }
+        set { }
+    }
+    public int NeighbourCount
+    {
+        get { return neighbours; }
+    }
+
+    public bool HasBomb
+    {
+        get { return hasBomb; }
+    }
+
+    public bool IsRevealed
+    {
+        get { return isRevealed; }
     }
 
     public void SetCoordinates(int x, int y)
@@ -23,23 +38,18 @@ public class Cell : MonoBehaviour
         yCoordinate = y;
     }
 
-    public bool HasBomb()
+    public void SetBomb(bool b)
     {
-        return hasBomb;
+        hasBomb = b;
     }
 
-    public void SetBomb()
+    public void SetRevealed(bool b)
     {
-        hasBomb = true;
+        isRevealed = b;
     }
 
     public void AddNeighbour(int n)
     {
         neighbours += n;
-    }
-
-    public int GetNeighbours()
-    {
-        return neighbours;
     }
 }

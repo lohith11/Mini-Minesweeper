@@ -7,6 +7,12 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField] float bombProbability;
     [SerializeField] GameObject cellPrefab;
     int bombCount = 0;
+    public static LevelGeneration levelGenerationInstance;
+
+    void Awake()
+    {
+        levelGenerationInstance = this;
+    }
 
     public Cell[,] GenerateLevel(int rows, int cols)
     {
@@ -20,7 +26,7 @@ public class LevelGeneration : MonoBehaviour
                 if (Random.Range(0f, 1f) < bombProbability)
                 {
                     Debug.Log("Bomb placed at " + i + ", " + j);
-                    level[i, j].SetBomb();
+                    level[i, j].SetBomb(true);
                     bombCount++;
                 }
             }
@@ -35,7 +41,7 @@ public class LevelGeneration : MonoBehaviour
         {
             for (int j = 0; j < level.GetLength(1); j++)
             {
-                if (level[i, j].HasBomb())
+                if (level[i, j].HasBomb)
                     continue;
                 else
                 {
@@ -47,7 +53,7 @@ public class LevelGeneration : MonoBehaviour
                                 continue;
                             else if (i + x < 0 || i + x >= level.GetLength(0) || j + y < 0 || j + y >= level.GetLength(1))
                                 continue;
-                            else if (level[i + x, j + y].HasBomb())
+                            else if (level[i + x, j + y].HasBomb)
                                 level[i, j].AddNeighbour(1);
                         }
                     }
@@ -58,7 +64,7 @@ public class LevelGeneration : MonoBehaviour
         {
             for (int j = 0; j < level.GetLength(1); j++)
             {
-                Debug.Log("Cell at " + i + ", " + j + " has " + level[i, j].GetNeighbours() + " neighbours");
+                Debug.Log("Cell at " + i + ", " + j + " has " + level[i, j].NeighbourCount + " neighbours");
             }
         }
         return level;
@@ -66,24 +72,44 @@ public class LevelGeneration : MonoBehaviour
 
     public void SetTiles(Cell[,] level)
     {
+        CellProperties[] existingLevel = FindObjectsOfType<CellProperties>();
         for (int i = 0; i < level.GetLength(0); i++)
         {
             for (int j = 0; j < level.GetLength(1); j++)
             {
                 GameObject tile = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
-                //tile.GetComponent<Cell>().SetCoordinates(i, j);
-                if (level[i, j].HasBomb())
+
+                CellProperties cellProperties = tile.GetComponent<CellProperties>();
+                SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
+                MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
+                SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
+                TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
+
+                cellProperties.SetProperties(level[i, j]);
+                tileRenderer.enabled = true;
+                bombRenderer.enabled = false;
+                textRenderer.enabled = false;
+
+                if (cellProperties.isRevealed)
                 {
-                    tile.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
-                    tile.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
-                }
-                else
-                {
-                    tile.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-                    tile.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = true;
-                    tile.transform.GetChild(1).GetComponent<TextMesh>().text = level[i, j].GetNeighbours().ToString();
+                    tileRenderer.enabled = false;
+
+                    if (cellProperties.hasBomb)
+                    {
+                        bombRenderer.enabled = true;
+                        textRenderer.enabled = false;
+                    }
+                    else
+                    {
+                        bombRenderer.enabled = false;
+                        textRenderer.enabled = true;
+                        textMesh.text = level[i, j].NeighbourCount.ToString();
+                    }
                 }
             }
         }
+
+        for(int i=0;i<existingLevel.Length;i++)
+            Destroy(existingLevel[i].gameObject);
     }
 }
