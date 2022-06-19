@@ -4,47 +4,39 @@ using UnityEngine;
 
 public class Trajectory_Line : MonoBehaviour
 {
-    Vector3 startPos;
-    Vector3 endPos;
-    Vector3 mousePos;
-    Vector3 mouseDir;
+    Vector2 startPos, endPos, mouseStart, mouseEnd;
     Camera cam;
-    LineRenderer lr;
+    LineRenderer lineRenderer;
 
-    // Start is called before the first frame update
+    DragNShoot ball;
     void Start()
     {
-        lr = GetComponent<LineRenderer>();
+        lineRenderer = GetComponent<LineRenderer>();
+        ball = FindObjectOfType<DragNShoot>();
         cam = Camera.main;
     }
-
-    // Update is called once per frame
     void Update()
     {
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        mouseDir = mousePos - gameObject.transform.position;
-        mouseDir.z= 0;
-        mouseDir = mouseDir.normalized;
-
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            lr.enabled = true;
+            lineRenderer.enabled = true;
+            startPos = ball.transform.position;
+            mouseStart = cam.ScreenToWorldPoint(Input.mousePosition);
         }
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
-            startPos = gameObject.transform.position;
-            startPos.z = 0;
-            lr.SetPosition(0 , startPos);
-            endPos = mousePos; 
-            endPos.z = 0;
-            float capLength = Mathf.Clamp(Vector2.Distance(startPos,endPos) , 0 , 3);
-            endPos = startPos + (  mouseDir * capLength);
-            lr.SetPosition(1, endPos);
+            lineRenderer.SetPosition(0, startPos);
+            mouseEnd = cam.ScreenToWorldPoint(Input.mousePosition);
+
+            endPos = (mouseEnd - mouseStart) + startPos;
+            float capLength = Mathf.Clamp(Vector2.Distance(startPos, endPos), 0, 3);
+            endPos = startPos + ((mouseEnd - mouseStart).normalized * capLength);
+            lineRenderer.SetPosition(1, endPos);
         }
 
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
-            lr.enabled = false;
+            lineRenderer.enabled = false;
         }
     }
 }

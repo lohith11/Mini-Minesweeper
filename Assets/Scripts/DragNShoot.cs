@@ -4,54 +4,47 @@ using UnityEngine;
 
 public class DragNShoot : MonoBehaviour
 {
-    public float power = 10f;
-    private Rigidbody2D rb;
-    public Vector2 minPower;
-    public Vector2 maxPower;
+    Rigidbody2D rb;
     Camera cam;
-    Vector2 force;
-    public Vector3 startPoint;
-    public Vector3 endPoint;
-     public Vector3 startpos;
-    public Vector3 endpos;
-    public float airDrag = 50;
-
+    Vector2 startPoint, endPoint, appliedForce, forceVector;
+    bool isMoving;
+    [SerializeField] float airDrag, maxPower, minVelocity, power;
 
     void Start()
     {
+        isMoving = false;
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
     }
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (rb.velocity.magnitude > minVelocity)
         {
-            startPoint = cam.ScreenToViewportPoint(Input.mousePosition);
-            startPoint.z = 0;
-            rb.velocity = Vector3.zero;
-        }
-
-        if(Input.GetMouseButton(0))
-        {
-            Vector3 currentPoint = cam.ScreenToViewportPoint(Input.mousePosition);
-            startPoint.z = 0;
-        }
-
-        if(Input.GetMouseButtonUp(0))
-        {
-            endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
-            endPoint.z = 0;
-
-            force = new Vector2(Mathf.Clamp(startPoint.x - endPoint.x, minPower.x, maxPower.x), Mathf.Clamp(startPoint.y - endPoint.y, minPower.y, maxPower.y));
-            rb.AddForce(force * power , ForceMode2D.Impulse);
-        }
-
-        if(rb.velocity != Vector2.zero)
-        {
+            isMoving = true;
             rb.AddForce(-rb.velocity.normalized * airDrag);
         }
+        else
+        {
+            rb.velocity = Vector2.zero;
+            isMoving = false;
+        }
 
-    
+        if (!isMoving)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+                forceVector = startPoint - endPoint;
+                appliedForce = forceVector.normalized * Mathf.Clamp(forceVector.magnitude, -maxPower, maxPower);
+                rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
+                Debug.Log("Force Vector: " + forceVector + ", Applied Force: " + appliedForce);
+            }
+        }
     }
 }
