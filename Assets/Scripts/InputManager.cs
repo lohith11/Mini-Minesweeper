@@ -18,12 +18,41 @@ public class InputManager : MonoBehaviour
             {
                 CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
                 Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+                GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
+                LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            if (hit.collider != null)
+            {
+                CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
+                Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+                GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
+
+                if (cellProps.isMarked)
+                {
+                    cellProps.isMarked = false;
+                    GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(false);
+                    cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = false;
+                }
+                else
+                {
+                    cellProps.isMarked = true;
+                    GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
+                    cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = true;
+                }
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            levelCopy = LevelManager.levelManagerInstance.level;
+            levelCopy = GameManager.gameManagerInstance.masterLevel;
             notRevealed = new List<Vector2Int>();
 
             for (int i = 0; i < levelCopy.GetLength(0); i++)
@@ -42,8 +71,6 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            //levelCopy = LevelManager.levelManagerInstance.level;
-            //notRevealed = new List<Vector2Int>();
             for (int i = 0; i < levelCopy.GetLength(0); i++)
             {
                 for (int j = 0; j < levelCopy.GetLength(1); j++)

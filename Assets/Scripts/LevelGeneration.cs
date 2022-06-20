@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
@@ -64,6 +62,8 @@ public class LevelGeneration : MonoBehaviour
 
     public void SetTiles(Cell[,] level)
     {
+        CellProperties[] existingTiles = FindObjectsOfType<CellProperties>();
+
         for (int i = 0; i < level.GetLength(0); i++)
         {
             for (int j = 0; j < level.GetLength(1); j++)
@@ -72,6 +72,11 @@ public class LevelGeneration : MonoBehaviour
                 cell.GetComponent<CellProperties>().SetProperties(level[i, j]);
                 SetTile(level[i, j]);
             }
+        }
+
+        foreach (CellProperties tile in existingTiles)
+        {
+            Destroy(tile.gameObject);
         }
     }
 
@@ -85,14 +90,16 @@ public class LevelGeneration : MonoBehaviour
                 GameObject tile = existingLevel[i].gameObject;
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
+                SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
+                SpriteRenderer flagRenderer = tile.transform.GetChild(3).GetComponent<SpriteRenderer>();
                 MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
                 TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
-                SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
 
                 cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
                 bombRenderer.enabled = false;
                 textRenderer.enabled = false;
+                flagRenderer.enabled = false;
 
                 if (cellProperties.isRevealed)
                 {
@@ -105,12 +112,39 @@ public class LevelGeneration : MonoBehaviour
                     }
                     else
                     {
-                        bombRenderer.enabled = false;
-                        textRenderer.enabled = true;
-                        textMesh.text = cell.NeighbourCount.ToString();
+                        if (cell.NeighbourCount != 0)
+                        {
+                            bombRenderer.enabled = false;
+                            textRenderer.enabled = true;
+                            textMesh.text = cell.NeighbourCount.ToString();
+                        }
+                        else
+                        {
+                            bombRenderer.enabled = false;
+                            textRenderer.enabled = false;
+                        }
                     }
                 }
+                else
+                {
+                    if (cellProperties.isMarked)
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = true;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                    else
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                }
+                return;
             }
         }
+        Debug.Log("Tile " + cell.Coordinates + " not found");
     }
 }

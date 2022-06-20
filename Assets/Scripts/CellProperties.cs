@@ -5,7 +5,7 @@ using UnityEngine;
 public class CellProperties : MonoBehaviour
 {
     public int xCoordinate, yCoordinate, neighbours;
-    public bool hasBomb, isRevealed;
+    public bool hasBomb, isRevealed, isMarked;
 
     public void SetProperties(Cell cell)
     {
@@ -14,5 +14,6 @@ public class CellProperties : MonoBehaviour
         neighbours = cell.NeighbourCount;
         hasBomb = cell.HasBomb;
         isRevealed = cell.IsRevealed;
+        isMarked = cell.IsMarked;
     }
 }
