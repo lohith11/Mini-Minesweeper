@@ -7,12 +7,12 @@ public class DragNShoot : MonoBehaviour
     Rigidbody2D rb;
     Camera cam;
     Vector2 startPoint, endPoint, appliedForce, forceVector;
-    bool isMoving;
+    public bool IsMoving {get; private set;}
     [SerializeField] float airDrag, maxPower, minVelocity, power;
 
     void Start()
     {
-        isMoving = false;
+        IsMoving = false;
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
     }
@@ -21,16 +21,16 @@ public class DragNShoot : MonoBehaviour
     {
         if (rb.velocity.magnitude > minVelocity)
         {
-            isMoving = true;
+            IsMoving = true;
             rb.AddForce(-rb.velocity.normalized * airDrag);
         }
         else
         {
             rb.velocity = Vector2.zero;
-            isMoving = false;
+            IsMoving = false;
         }
 
-        if (!isMoving)
+        if (!IsMoving)
         {
             if (Input.GetMouseButtonDown(0))
             {

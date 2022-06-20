@@ -17,6 +17,11 @@ public class Trajectory_Line : MonoBehaviour
     }
     void Update()
     {
+        if(ball.IsMoving)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             lineRenderer.enabled = true;
@@ -30,7 +35,7 @@ public class Trajectory_Line : MonoBehaviour
 
             endPos = (mouseEnd - mouseStart) + startPos;
             float capLength = Mathf.Clamp(Vector2.Distance(startPos, endPos), 0, 3);
-            endPos = startPos + ((mouseEnd - mouseStart).normalized * capLength);
+            endPos = startPos + ( - (mouseEnd - mouseStart).normalized * capLength);
             lineRenderer.SetPosition(1, endPos);
         }
 
