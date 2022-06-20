@@ -25,7 +25,6 @@ public class LevelGeneration : MonoBehaviour
                 level[i, j] = new Cell(i, j);
                 if (Random.Range(0f, 1f) < bombProbability)
                 {
-                    Debug.Log("Bomb placed at " + i + ", " + j);
                     level[i, j].SetBomb(true);
                     bombCount++;
                 }
@@ -60,32 +59,37 @@ public class LevelGeneration : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < level.GetLength(0); i++)
-        {
-            for (int j = 0; j < level.GetLength(1); j++)
-            {
-                Debug.Log("Cell at " + i + ", " + j + " has " + level[i, j].NeighbourCount + " neighbours");
-            }
-        }
         return level;
     }
 
     public void SetTiles(Cell[,] level)
     {
-        CellProperties[] existingLevel = FindObjectsOfType<CellProperties>();
         for (int i = 0; i < level.GetLength(0); i++)
         {
             for (int j = 0; j < level.GetLength(1); j++)
             {
-                GameObject tile = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
+                GameObject cell = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
+                cell.GetComponent<CellProperties>().SetProperties(level[i, j]);
+                SetTile(level[i, j]);
+            }
+        }
+    }
 
+    public void SetTile(Cell cell)
+    {
+        CellProperties[] existingLevel = FindObjectsOfType<CellProperties>();
+        for (int i = 0; i < existingLevel.Length; i++)
+        {
+            if (existingLevel[i].xCoordinate == cell.Coordinates.x && existingLevel[i].yCoordinate == cell.Coordinates.y)
+            {
+                GameObject tile = existingLevel[i].gameObject;
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
                 MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
-                SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
                 TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
+                SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
 
-                cellProperties.SetProperties(level[i, j]);
+                cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
                 bombRenderer.enabled = false;
                 textRenderer.enabled = false;
@@ -103,13 +107,10 @@ public class LevelGeneration : MonoBehaviour
                     {
                         bombRenderer.enabled = false;
                         textRenderer.enabled = true;
-                        textMesh.text = level[i, j].NeighbourCount.ToString();
+                        textMesh.text = cell.NeighbourCount.ToString();
                     }
                 }
             }
         }
-
-        for(int i=0;i<existingLevel.Length;i++)
-            Destroy(existingLevel[i].gameObject);
     }
 }

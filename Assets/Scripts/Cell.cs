@@ -15,21 +15,24 @@ public class Cell
     public Vector2Int Coordinates
     {
         get { return new Vector2Int(xCoordinate, yCoordinate); }
-        set { }
+        private set { }
     }
     public int NeighbourCount
     {
         get { return neighbours; }
+        private set { }
     }
 
     public bool HasBomb
     {
         get { return hasBomb; }
+        private set { }
     }
 
     public bool IsRevealed
     {
         get { return isRevealed; }
+        private set { }
     }
 
     public void SetCoordinates(int x, int y)

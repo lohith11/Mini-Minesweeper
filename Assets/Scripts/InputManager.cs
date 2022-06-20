@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    List<Vector2Int> notRevealed;
+    [HideInInspector] List<Vector2Int> notRevealed;
     Cell[,] levelCopy;
     void Update()
     {
