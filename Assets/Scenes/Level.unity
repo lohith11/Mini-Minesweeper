@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 1837251489}
   - component: {fileID: 1837251488}
   - component: {fileID: 1837251490}
+  - component: {fileID: 1837251491}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -264,6 +265,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14883ca83cc4cf34ab0837f6f157a25f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridSize: 15
+--- !u!114 &1837251491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837251487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c6b52cc313fedc4e93df9178fed3417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombProbability: 0.15
+  cellPrefab: {fileID: 4531194104982949465, guid: 2b74d096f2079404db93ef0119188040, type: 3}
 --- !u!1 &1840950122
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,8 +289,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1840950124}
-  - component: {fileID: 1840950126}
-  - component: {fileID: 1840950125}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -297,33 +311,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1840950125
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1840950122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9957a9ba8191e954c906f3d4b79d2403, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridSize: 15
---- !u!114 &1840950126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1840950122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c6b52cc313fedc4e93df9178fed3417, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bombProbability: 0.15
-  cellPrefab: {fileID: 4531194104982949465, guid: 2b74d096f2079404db93ef0119188040, type: 3}
 --- !u!1 &1872769433
 GameObject:
   m_ObjectHideFlags: 0
