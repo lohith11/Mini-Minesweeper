@@ -102,91 +102,93 @@ public class LevelGeneration : MonoBehaviour
                 flagRenderer.enabled = false;
 
                 textMesh.text = cellProperties.neighbours.ToString();
-                if (cellProperties.isRevealed)
-                {
-                    tileRenderer.enabled = false;
-                }
-                if (cellProperties.neighbours != 0)
-                {
-                    textRenderer.enabled = true;
-                }
-                if (cellProperties.hasBomb)
-                {
-                    bombRenderer.enabled = true;
-                    textRenderer.enabled = false;
-                }
-                if (cellProperties.isMarked)
-                {
-                    flagRenderer.enabled = true;
-                }
                 // if (cellProperties.isRevealed)
                 // {
                 //     tileRenderer.enabled = false;
-
-                //     if (cellProperties.hasBomb)
-                //     {
-                //         bombRenderer.enabled = true;
-                //         textRenderer.enabled = false;
-                //     }
-                //     else
-                //     {
-                //         if (cell.NeighbourCount != 0)
-                //         {
-                //             bombRenderer.enabled = false;
-                //             textRenderer.enabled = true;
-                //             textMesh.text = cell.NeighbourCount.ToString();
-                //         }
-                //         else
-                //         {
-                //             bombRenderer.enabled = false;
-                //             textRenderer.enabled = false;
-                //         }
-                //     }
                 // }
-                // else
+                // if (cellProperties.neighbours != 0)
                 // {
-                //     if (cellProperties.isMarked)
-                //     {
-                //         tileRenderer.enabled = true;
-                //         flagRenderer.enabled = true;
-                //         textRenderer.enabled = false;
-                //         bombRenderer.enabled = false;
-                //     }
-                //     else
-                //     {
-                //         tileRenderer.enabled = true;
-                //         flagRenderer.enabled = false;
-                //         textRenderer.enabled = false;
-                //         bombRenderer.enabled = false;
-                //     }
+                //     textRenderer.enabled = true;
                 // }
+                // if (cellProperties.hasBomb)
+                // {
+                //     bombRenderer.enabled = true;
+                //     textRenderer.enabled = false;
+                // }
+                // if (cellProperties.isMarked)
+                // {
+                //     flagRenderer.enabled = true;
+                // }
+
+                if (cellProperties.isRevealed)
+                {
+                    tileRenderer.enabled = false;
+
+                    if (cellProperties.hasBomb)
+                    {
+                        bombRenderer.enabled = true;
+                        flagRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                    }
+                    else
+                    {
+                        if (cell.NeighbourCount != 0)
+                        {
+                            textRenderer.enabled = true;
+                            bombRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            textMesh.text = cell.NeighbourCount.ToString();
+                        }
+                        else
+                        {
+                            bombRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            textRenderer.enabled = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (cellProperties.isMarked)
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = true;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                    else
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                }
+                //Destroy(existingLevel[i].gameObject);
                 return;
             }
-            Destroy(existingLevel[i].gameObject);
         }
         Debug.Log("Tile " + cell.Coordinates + " not found");
     }
 
     public void CheckNeighbours(Cell cell)
     {
-        if (cell.NeighbourCount == 0)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int x = -1; x <= 1; x++)
+            for (int y = -1; y <= 1; y++)
             {
-                for (int y = -1; y <= 1; y++)
+                if (x == 0 && y == 0)
+                    continue;
+
+                else if (cell.Coordinates.x + x < 0 || cell.Coordinates.x + x >= GameManager.gameManagerInstance.masterLevel.GetLength(0) || cell.Coordinates.y + y < 0 || cell.Coordinates.y + y >= GameManager.gameManagerInstance.masterLevel.GetLength(1))
+                    continue;
+
+                else if (!GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].IsRevealed)
                 {
-                    if (x == 0 && y == 0)
-                        continue;
-
-                    else if (cell.Coordinates.x + x < 0 || cell.Coordinates.x + x >= GameManager.gameManagerInstance.masterLevel.GetLength(0) || cell.Coordinates.y + y < 0 || cell.Coordinates.y + y >= GameManager.gameManagerInstance.masterLevel.GetLength(1))
-                        continue;
-
-                    else if (!GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].IsRevealed)
-                    {
-                        GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].SetRevealed(true);
-                        SetTile(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
+                    GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].SetRevealed(true);
+                    SetTile(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
+                    if (GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].NeighbourCount == 0)
                         CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
-                    }
                 }
             }
         }

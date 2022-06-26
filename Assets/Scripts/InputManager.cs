@@ -74,6 +74,7 @@ public class InputManager : MonoBehaviour
     {
         CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
         //Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+
         if (cellProps.isMarked)
         {
             Debug.Log("Tile marked");
@@ -84,19 +85,17 @@ public class InputManager : MonoBehaviour
             Debug.Log("Tile already revealed");
             return;
         }
-        else
+
+        GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
+
+        if (cellProps.hasBomb)
         {
-            GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
-            if (cellProps.hasBomb)
-            {
-                Debug.Log("Bomb hit!");
-                return;
-            }
-            else if (cellProps.neighbours == 0)
-            {
-                LevelGeneration.levelGenerationInstance.CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
-            }
+            Debug.Log("Bomb hit!");
+            return;
         }
+        else if (cellProps.neighbours == 0)
+            LevelGeneration.levelGenerationInstance.CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+
         LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
     }
 
