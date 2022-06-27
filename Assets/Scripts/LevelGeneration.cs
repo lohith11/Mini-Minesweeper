@@ -91,12 +91,14 @@ public class LevelGeneration : MonoBehaviour
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
                 SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
+                BoxCollider2D boxCollider = tile.transform.GetChild(2).GetComponent<BoxCollider2D>();
                 SpriteRenderer flagRenderer = tile.transform.GetChild(3).GetComponent<SpriteRenderer>();
                 MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
                 TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
 
                 cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
+                boxCollider.enabled = true;
                 textRenderer.enabled = false;
                 bombRenderer.enabled = false;
                 flagRenderer.enabled = false;
@@ -123,6 +125,7 @@ public class LevelGeneration : MonoBehaviour
                 if (cellProperties.isRevealed)
                 {
                     tileRenderer.enabled = false;
+                    boxCollider.enabled = false;
 
                     if (cellProperties.hasBomb)
                     {
@@ -152,6 +155,7 @@ public class LevelGeneration : MonoBehaviour
                     if (cellProperties.isMarked)
                     {
                         tileRenderer.enabled = true;
+                        boxCollider.enabled = true;
                         flagRenderer.enabled = true;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;
@@ -159,6 +163,7 @@ public class LevelGeneration : MonoBehaviour
                     else
                     {
                         tileRenderer.enabled = true;
+                        boxCollider.enabled = true;
                         flagRenderer.enabled = false;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;

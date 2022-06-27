@@ -6,15 +6,20 @@ public class InputManager : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!GameManager.gameManagerInstance.gameStarted)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            GameManager.gameManagerInstance.gameStarted = true;
 
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null)
+            if (Input.GetMouseButtonDown(0))
             {
-                ClickedOnTile(hit);
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+                RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+                if (hit.collider != null)
+                {
+                    StartGameAt(hit);
+                }
             }
         }
 
@@ -101,6 +106,9 @@ public class InputManager : MonoBehaviour
 
     void MarkedTile(RaycastHit2D hit)
     {
+        if (!GameManager.gameManagerInstance.gameStarted)
+            return;
+
         CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
         //Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
@@ -123,5 +131,16 @@ public class InputManager : MonoBehaviour
             GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
             cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = true;
         }
+    }
+
+    void StartGameAt(RaycastHit2D hit)
+    {
+        CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
+        Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+
+        GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetBomb(false);
+        GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
+        LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+        GameManager.gameManagerInstance.StartGame();
     }
 }

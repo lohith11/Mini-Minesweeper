@@ -17,6 +17,9 @@ public class TrajectoryLine : MonoBehaviour
     }
     void Update()
     {
+        if (!GameManager.gameManagerInstance.gameStarted)
+            return;
+
         if (ball.IsMoving)
         {
             return;
