@@ -1,24 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
     public int gridSize;
-    LevelGeneration levelGenerationInstance;
     public static LevelManager levelManagerInstance;
     public Cell[,] level;
-    void Start()
+    void Awake()
     {
         levelManagerInstance = this;
-        levelGenerationInstance = LevelGeneration.levelGenerationInstance;
-        StartGeneration();
     }
-    void StartGeneration()
+    public Cell[,] StartGeneration()
     {
-        level = levelGenerationInstance.GenerateLevel(gridSize, gridSize);
-        level = levelGenerationInstance.SetNeighbours(level);
-        levelGenerationInstance.SetTiles(level);
+        level = LevelGeneration.levelGenerationInstance.GenerateLevel(gridSize, gridSize);
+        level = LevelGeneration.levelGenerationInstance.SetNeighbours(level);
+        LevelGeneration.levelGenerationInstance.SetTiles(level);
+        return level;
     }
 
     public Cell[,] GetLevel()

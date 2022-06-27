@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
@@ -25,7 +23,6 @@ public class LevelGeneration : MonoBehaviour
                 level[i, j] = new Cell(i, j);
                 if (Random.Range(0f, 1f) < bombProbability)
                 {
-                    Debug.Log("Bomb placed at " + i + ", " + j);
                     level[i, j].SetBomb(true);
                     bombCount++;
                 }
@@ -60,35 +57,68 @@ public class LevelGeneration : MonoBehaviour
                 }
             }
         }
-        for (int i = 0; i < level.GetLength(0); i++)
-        {
-            for (int j = 0; j < level.GetLength(1); j++)
-            {
-                Debug.Log("Cell at " + i + ", " + j + " has " + level[i, j].NeighbourCount + " neighbours");
-            }
-        }
         return level;
     }
 
     public void SetTiles(Cell[,] level)
     {
-        CellProperties[] existingLevel = FindObjectsOfType<CellProperties>();
+        CellProperties[] existingTiles = FindObjectsOfType<CellProperties>();
+
         for (int i = 0; i < level.GetLength(0); i++)
         {
             for (int j = 0; j < level.GetLength(1); j++)
             {
-                GameObject tile = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
+                GameObject cell = Instantiate(cellPrefab, new Vector3(i, j, 0), Quaternion.identity);
+                cell.GetComponent<CellProperties>().SetProperties(level[i, j]);
+                SetTile(level[i, j]);
+            }
+        }
 
+        foreach (CellProperties tile in existingTiles)
+        {
+            Destroy(tile.gameObject);
+        }
+    }
+
+    public void SetTile(Cell cell)
+    {
+        CellProperties[] existingLevel = FindObjectsOfType<CellProperties>();
+        for (int i = 0; i < existingLevel.Length; i++)
+        {
+            if (existingLevel[i].xCoordinate == cell.Coordinates.x && existingLevel[i].yCoordinate == cell.Coordinates.y)
+            {
+                GameObject tile = existingLevel[i].gameObject;
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
-                MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
                 SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
+                SpriteRenderer flagRenderer = tile.transform.GetChild(3).GetComponent<SpriteRenderer>();
+                MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
                 TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
 
-                cellProperties.SetProperties(level[i, j]);
+                cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
-                bombRenderer.enabled = false;
                 textRenderer.enabled = false;
+                bombRenderer.enabled = false;
+                flagRenderer.enabled = false;
+
+                textMesh.text = cellProperties.neighbours.ToString();
+                // if (cellProperties.isRevealed)
+                // {
+                //     tileRenderer.enabled = false;
+                // }
+                // if (cellProperties.neighbours != 0)
+                // {
+                //     textRenderer.enabled = true;
+                // }
+                // if (cellProperties.hasBomb)
+                // {
+                //     bombRenderer.enabled = true;
+                //     textRenderer.enabled = false;
+                // }
+                // if (cellProperties.isMarked)
+                // {
+                //     flagRenderer.enabled = true;
+                // }
 
                 if (cellProperties.isRevealed)
                 {
@@ -97,19 +127,70 @@ public class LevelGeneration : MonoBehaviour
                     if (cellProperties.hasBomb)
                     {
                         bombRenderer.enabled = true;
+                        flagRenderer.enabled = false;
                         textRenderer.enabled = false;
                     }
                     else
                     {
-                        bombRenderer.enabled = false;
-                        textRenderer.enabled = true;
-                        textMesh.text = level[i, j].NeighbourCount.ToString();
+                        if (cell.NeighbourCount != 0)
+                        {
+                            textRenderer.enabled = true;
+                            bombRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            textMesh.text = cell.NeighbourCount.ToString();
+                        }
+                        else
+                        {
+                            bombRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            textRenderer.enabled = false;
+                        }
                     }
+                }
+                else
+                {
+                    if (cellProperties.isMarked)
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = true;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                    else
+                    {
+                        tileRenderer.enabled = true;
+                        flagRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                    }
+                }
+                //Destroy(existingLevel[i].gameObject);
+                return;
+            }
+        }
+        Debug.Log("Tile " + cell.Coordinates + " not found");
+    }
+
+    public void CheckNeighbours(Cell cell)
+    {
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                else if (cell.Coordinates.x + x < 0 || cell.Coordinates.x + x >= GameManager.gameManagerInstance.masterLevel.GetLength(0) || cell.Coordinates.y + y < 0 || cell.Coordinates.y + y >= GameManager.gameManagerInstance.masterLevel.GetLength(1))
+                    continue;
+
+                else if (!GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].IsRevealed)
+                {
+                    GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].SetRevealed(true);
+                    SetTile(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
+                    if (GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].NeighbourCount == 0)
+                        CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
                 }
             }
         }
-
-        for(int i=0;i<existingLevel.Length;i++)
-            Destroy(existingLevel[i].gameObject);
     }
 }
