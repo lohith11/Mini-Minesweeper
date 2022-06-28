@@ -8,7 +8,7 @@ public class DragNShoot : MonoBehaviour
     Camera cam;
     Vector2 startPoint, endPoint, appliedForce, forceVector;
     public bool IsMoving { get; private set; }
-    [SerializeField] float airDrag, maxPower, minVelocity, power;
+    [SerializeField] float airDrag, maxPower, minVelocity, power, minBreakVelocity;
 
     void Start()
     {
@@ -19,9 +19,6 @@ public class DragNShoot : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.gameManagerInstance.gameStarted)
-            return;
-
         if (rb.velocity.magnitude > minVelocity)
         {
             IsMoving = true;
@@ -32,6 +29,10 @@ public class DragNShoot : MonoBehaviour
             rb.velocity = Vector2.zero;
             IsMoving = false;
         }
+
+        if (!GameManager.gameManagerInstance.gameStarted)
+            return;
+
 
         if (!IsMoving)
         {
@@ -48,6 +49,18 @@ public class DragNShoot : MonoBehaviour
                 rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
                 Debug.Log("Force Vector: " + forceVector + ", Applied Force: " + appliedForce);
             }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        CellProperties cellProps;
+        Debug.Log("Collision with " + other.gameObject.name);
+        if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
+        {
+            Debug.Log("Collided!");
+            cellProps = other.transform.parent.GetComponent<CellProperties>();
+            InputManager.inputManagerInstance.ClickedOnTile(cellProps);
         }
     }
 }

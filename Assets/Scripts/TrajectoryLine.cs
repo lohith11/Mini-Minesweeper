@@ -7,13 +7,15 @@ public class TrajectoryLine : MonoBehaviour
     Vector2 startPos, endPos, mouseStart, mouseEnd;
     Camera cam;
     LineRenderer lineRenderer;
-
     DragNShoot ball;
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        ball = FindObjectOfType<DragNShoot>();
         cam = Camera.main;
+    }
+    public void UpdateBallReference()
+    {
+        ball = FindObjectOfType<DragNShoot>();
     }
     void Update()
     {

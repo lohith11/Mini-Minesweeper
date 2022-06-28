@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager inputManagerInstance;
+    void Awake()
+    {
+        inputManagerInstance = this;
+    }
     void Update()
     {
         if (!GameManager.gameManagerInstance.gameStarted)
         {
-            GameManager.gameManagerInstance.gameStarted = true;
-
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -23,15 +26,18 @@ public class InputManager : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (GameManager.gameManagerInstance.gameStarted)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null)
+            if (Input.GetMouseButtonDown(1))
             {
-                MarkedTile(hit);
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+                RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+                if (hit.collider != null)
+                {
+                    MarkedTile(hit);
+                }
             }
         }
 
@@ -75,10 +81,10 @@ public class InputManager : MonoBehaviour
         #endregion
     }
 
-    void ClickedOnTile(RaycastHit2D hit)
+    public void ClickedOnTile(CellProperties cellProps)
     {
-        CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
-        //Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+        //CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
+        //Debug.Log("Hit cell: " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
 
         if (cellProps.isMarked)
         {
@@ -96,6 +102,7 @@ public class InputManager : MonoBehaviour
         if (cellProps.hasBomb)
         {
             Debug.Log("Bomb hit!");
+            LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
             return;
         }
         else if (cellProps.neighbours == 0)
@@ -141,6 +148,6 @@ public class InputManager : MonoBehaviour
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetBomb(false);
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
         LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
-        GameManager.gameManagerInstance.StartGame();
+        GameManager.gameManagerInstance.StartGame(new Vector2(cellProps.xCoordinate, cellProps.yCoordinate));
     }
 }

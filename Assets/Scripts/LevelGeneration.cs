@@ -3,7 +3,7 @@ using UnityEngine;
 public class LevelGeneration : MonoBehaviour
 {
     [SerializeField] float bombProbability;
-    [SerializeField] GameObject cellPrefab;
+    [SerializeField] GameObject cellPrefab, blockerPrefab;
     int bombCount = 0;
     public static LevelGeneration levelGenerationInstance;
 
@@ -77,6 +77,22 @@ public class LevelGeneration : MonoBehaviour
         foreach (CellProperties tile in existingTiles)
         {
             Destroy(tile.gameObject);
+        }
+
+        for (int i = 0; i < level.GetLength(0); i++)
+        {
+            for (int j = 0; j < level.GetLength(1); j++)
+            {
+                if (i == 0)
+                    Instantiate(blockerPrefab, new Vector3(i - 1, j, 0), Quaternion.identity);
+                if (i == level.GetLength(0) - 1)
+                    Instantiate(blockerPrefab, new Vector3(i + 1, j, 0), Quaternion.identity);
+
+                if (j == 0)
+                    Instantiate(blockerPrefab, new Vector3(i, j - 1, 0), Quaternion.identity);
+                if (j == level.GetLength(1) - 1)
+                    Instantiate(blockerPrefab, new Vector3(i, j + 1, 0), Quaternion.identity);
+            }
         }
     }
 
