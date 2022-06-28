@@ -28,13 +28,15 @@ public class DragNShoot : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
             IsMoving = false;
+            if (!GameManager.gameManagerInstance.gameStarted)
+                GameManager.gameManagerInstance.gameStarted = true;
         }
 
         if (!GameManager.gameManagerInstance.gameStarted)
             return;
 
 
-        if (!IsMoving)
+        if (!IsMoving && GameManager.gameManagerInstance.gameStarted)
         {
             if (Input.GetMouseButtonDown(0))
             {

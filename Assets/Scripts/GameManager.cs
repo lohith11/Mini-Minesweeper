@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         masterLevel = LevelGeneration.levelGenerationInstance.GenerateLevel(gridSize, gridSize);
+        //masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }
 
@@ -34,7 +35,7 @@ public class GameManager : MonoBehaviour
         ballSpawned = true;
         GameObject ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        FindObjectOfType<TrajectoryLine>().UpdateBallReference();
+        //FindObjectOfType<TrajectoryLine>().UpdateBallReference();
         masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }
