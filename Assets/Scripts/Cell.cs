@@ -5,7 +5,7 @@ using UnityEngine;
 public class Cell
 {
     int xCoordinate, yCoordinate, neighbours = 0;
-    bool hasBomb = false, isRevealed = false;
+    bool hasBomb = false, isRevealed = false, isMarked = false;
     public Cell(int x, int y)
     {
         xCoordinate = x;
@@ -15,21 +15,30 @@ public class Cell
     public Vector2Int Coordinates
     {
         get { return new Vector2Int(xCoordinate, yCoordinate); }
-        set { }
+        private set { }
     }
     public int NeighbourCount
     {
         get { return neighbours; }
+        private set { }
     }
 
     public bool HasBomb
     {
         get { return hasBomb; }
+        private set { }
     }
 
     public bool IsRevealed
     {
         get { return isRevealed; }
+        private set { }
+    }
+
+    public bool IsMarked
+    {
+        get { return isMarked; }
+        private set { }
     }
 
     public void SetCoordinates(int x, int y)
@@ -46,6 +55,11 @@ public class Cell
     public void SetRevealed(bool b)
     {
         isRevealed = b;
+    }
+
+    public void SetMarked(bool b)
+    {
+        isMarked = b;
     }
 
     public void AddNeighbour(int n)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Trajectory_Line : MonoBehaviour
+public class TrajectoryLine : MonoBehaviour
 {
     Vector2 startPos, endPos, mouseStart, mouseEnd;
     Camera cam;
@@ -17,6 +17,9 @@ public class Trajectory_Line : MonoBehaviour
     }
     void Update()
     {
+        if (!GameManager.gameManagerInstance.gameStarted)
+            return;
+
         if (ball.IsMoving)
         {
             return;
@@ -44,6 +47,4 @@ public class Trajectory_Line : MonoBehaviour
             lineRenderer.enabled = false;
         }
     }
-
-    
 }
