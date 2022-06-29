@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     {
         if (ballSpawned)
             timeSinceStart += Time.deltaTime;
+
+        if (timeSinceStart > gameStartTimeout)
+        {
+            if (!gameStarted)
+                gameStarted = true;
+        }
     }
 
     public void StartGame(Vector2 coordinates)
@@ -35,7 +41,7 @@ public class GameManager : MonoBehaviour
         ballSpawned = true;
         GameObject ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        //FindObjectOfType<TrajectoryLine>().UpdateBallReference();
+        FindObjectOfType<TrajectoryLine>().UpdateBallReference();
         masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }

@@ -7,7 +7,7 @@ public class DragNShoot : MonoBehaviour
     Rigidbody2D rb;
     Camera cam;
     Vector2 startPoint, endPoint, appliedForce, forceVector;
-    public bool IsMoving { get; private set; }
+    public bool IsMoving;
     [SerializeField] float airDrag, maxPower, minVelocity, power, minBreakVelocity;
 
     void Start()
@@ -28,8 +28,8 @@ public class DragNShoot : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
             IsMoving = false;
-            if (!GameManager.gameManagerInstance.gameStarted)
-                GameManager.gameManagerInstance.gameStarted = true;
+            // if (!GameManager.gameManagerInstance.gameStarted)
+            //     GameManager.gameManagerInstance.gameStarted = true;
         }
 
         if (!GameManager.gameManagerInstance.gameStarted)
