@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject ballPrefab;
     [SerializeField] float gameStartTimeout;
+    [SerializeField] CinemachineVirtualCamera topView, ballFollow;
 
     public bool gameStarted = false;
     bool ballSpawned = false;
@@ -20,7 +22,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         masterLevel = LevelGeneration.levelGenerationInstance.GenerateLevel(gridSize, gridSize);
-        //masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);
+        topView.transform.position = new Vector3(gridSize / 2, gridSize / 2, -10);
+        topView.m_Lens.OrthographicSize = (gridSize / 2) + 1;
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }
 
@@ -32,7 +35,11 @@ public class GameManager : MonoBehaviour
         if (timeSinceStart > gameStartTimeout)
         {
             if (!gameStarted)
+            {
                 gameStarted = true;
+                ballFollow.Priority = 10;
+                topView.Priority = 5;
+            }
         }
     }
 
@@ -40,6 +47,8 @@ public class GameManager : MonoBehaviour
     {
         ballSpawned = true;
         GameObject ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
+        ballFollow.Follow = ball.transform;
+        ballFollow.LookAt = ball.transform;
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         FindObjectOfType<TrajectoryLine>().UpdateBallReference();
         masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);

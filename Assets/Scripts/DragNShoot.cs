@@ -49,7 +49,7 @@ public class DragNShoot : MonoBehaviour
                 forceVector = startPoint - endPoint;
                 appliedForce = forceVector.normalized * Mathf.Clamp(forceVector.magnitude, -maxPower, maxPower);
                 rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
-                Debug.Log("Force Vector: " + forceVector + ", Applied Force: " + appliedForce);
+                //Debug.Log("Force Vector: " + forceVector + ", Applied Force: " + appliedForce);
             }
         }
     }
@@ -57,10 +57,10 @@ public class DragNShoot : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         CellProperties cellProps;
-        Debug.Log("Collision with " + other.gameObject.name);
+        //Debug.Log("Collision with " + other.gameObject.name);
         if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
         {
-            Debug.Log("Collided!");
+            //Debug.Log("Collided!");
             cellProps = other.transform.parent.GetComponent<CellProperties>();
             InputManager.inputManagerInstance.ClickedOnTile(cellProps);
         }

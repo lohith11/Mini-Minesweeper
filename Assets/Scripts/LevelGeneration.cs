@@ -4,6 +4,7 @@ public class LevelGeneration : MonoBehaviour
 {
     [SerializeField] float bombProbability;
     [SerializeField] GameObject cellPrefab, blockerPrefab;
+    [SerializeField] Sprite marked, unmarked;
     int bombCount = 0;
     public static LevelGeneration levelGenerationInstance;
 
@@ -92,6 +93,17 @@ public class LevelGeneration : MonoBehaviour
                     Instantiate(blockerPrefab, new Vector3(i, j - 1, 0), Quaternion.identity);
                 if (j == level.GetLength(1) - 1)
                     Instantiate(blockerPrefab, new Vector3(i, j + 1, 0), Quaternion.identity);
+
+
+                if (i == 0 && j == 0)
+                    Instantiate(blockerPrefab, new Vector3(i - 1, j - 1, 0), Quaternion.identity);
+                if (i == 0 && j == level.GetLength(1) - 1)
+                    Instantiate(blockerPrefab, new Vector3(i - 1, j + 1, 0), Quaternion.identity);
+
+                if (i == level.GetLength(0) - 1 && j == 0)
+                    Instantiate(blockerPrefab, new Vector3(i + 1, j - 1, 0), Quaternion.identity);
+                if (i == level.GetLength(0) - 1 && j == level.GetLength(1) - 1)
+                    Instantiate(blockerPrefab, new Vector3(i + 1, j + 1, 0), Quaternion.identity);
             }
         }
     }
