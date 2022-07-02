@@ -5,13 +5,14 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public static InputManager inputManagerInstance;
+    public CellProperties StartProperties;
     void Awake()
     {
         inputManagerInstance = this;
     }
     void Update()
     {
-        if (!GameManager.gameManagerInstance.gameStarted)
+        if (!GameManager.gameManagerInstance.gameStarted && !GameManager.gameManagerInstance.gameEnded)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -102,6 +103,7 @@ public class InputManager : MonoBehaviour
         if (cellProps.hasBomb)
         {
             Debug.Log("Bomb hit!");
+            HealthManager.healthManagerInstance.BombHit();
             LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
             return;
         }
@@ -117,7 +119,7 @@ public class InputManager : MonoBehaviour
             return;
 
         CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
-        //Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+        Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
 
         if (cellProps.isRevealed)
@@ -130,24 +132,29 @@ public class InputManager : MonoBehaviour
         {
             cellProps.isMarked = false;
             GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(false);
-            cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = false;
+            LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+            //cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = false;
         }
         else
         {
             cellProps.isMarked = true;
             GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
-            cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = true;
+            LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+            //cellProps.transform.GetChild(3).GetComponent<SpriteRenderer>().enabled = true;
         }
     }
 
     void StartGameAt(RaycastHit2D hit)
     {
         CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
-        Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
+        StartProperties = cellProps;
+        //Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
 
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetBomb(false);
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
         LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
+        GameManager.gameManagerInstance.masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(GameManager.gameManagerInstance.masterLevel);
+
         GameManager.gameManagerInstance.StartGame(new Vector2(cellProps.xCoordinate, cellProps.yCoordinate));
     }
 }

@@ -7,13 +7,15 @@ public class GameManager : MonoBehaviour
     public Cell[,] masterLevel;
     public int gridSize;
 
+    Vector2Int startCoordinates;
+
     float timeSinceStart = 0f;
 
     [SerializeField] GameObject ballPrefab;
     [SerializeField] float gameStartTimeout;
     [SerializeField] CinemachineVirtualCamera topView, ballFollow;
 
-    public bool gameStarted = false;
+    public bool gameStarted = false, gameEnded = false;
     bool ballSpawned = false;
     void Awake()
     {
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
             if (!gameStarted)
             {
                 gameStarted = true;
+                CheckReveal();
                 ballFollow.Priority = 10;
                 topView.Priority = 5;
             }
@@ -45,13 +48,26 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(Vector2 coordinates)
     {
+        startCoordinates = new Vector2Int((int)coordinates.x, (int)coordinates.y);
         ballSpawned = true;
         GameObject ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
         ballFollow.Follow = ball.transform;
         ballFollow.LookAt = ball.transform;
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         FindObjectOfType<TrajectoryLine>().UpdateBallReference();
-        masterLevel = LevelGeneration.levelGenerationInstance.SetNeighbours(masterLevel);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
+        HealthManager.healthManagerInstance.GameStarted();
+    }
+
+    void CheckReveal()
+    {
+        if (masterLevel[startCoordinates.x, startCoordinates.y].NeighbourCount == 0)
+            LevelGeneration.levelGenerationInstance.CheckNeighbours(masterLevel[startCoordinates.x, startCoordinates.y]);
+    }
+
+    public void GameOver()
+    {
+        gameStarted = false;
+        gameEnded = true;
     }
 }

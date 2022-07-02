@@ -54,6 +54,9 @@ public class Cell
 
     public void SetRevealed(bool b)
     {
+        if (!hasBomb)
+            HealthManager.healthManagerInstance.TileRevealed();
+
         isRevealed = b;
     }
 

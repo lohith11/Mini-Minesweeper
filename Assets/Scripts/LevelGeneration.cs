@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
 {
     [SerializeField] float bombProbability;
-    [SerializeField] GameObject cellPrefab, blockerPrefab;
+    [SerializeField] GameObject cellPrefab, blockerTop, blockerSides, blockerTopLeft, blockerTopRight, blockerBottomLeft, blockerBottomRight;
     [SerializeField] Sprite marked, unmarked;
+    [SerializeField] List<Sprite> numbers;
     int bombCount = 0;
     public static LevelGeneration levelGenerationInstance;
 
@@ -85,25 +87,25 @@ public class LevelGeneration : MonoBehaviour
             for (int j = 0; j < level.GetLength(1); j++)
             {
                 if (i == 0)
-                    Instantiate(blockerPrefab, new Vector3(i - 1, j, 0), Quaternion.identity);
+                    Instantiate(blockerSides, new Vector3(i - 1, j, 0), Quaternion.identity);
                 if (i == level.GetLength(0) - 1)
-                    Instantiate(blockerPrefab, new Vector3(i + 1, j, 0), Quaternion.identity);
+                    Instantiate(blockerSides, new Vector3(i + 1, j, 0), Quaternion.identity);
 
                 if (j == 0)
-                    Instantiate(blockerPrefab, new Vector3(i, j - 1, 0), Quaternion.identity);
+                    Instantiate(blockerTop, new Vector3(i, j - 1, 0), Quaternion.identity);
                 if (j == level.GetLength(1) - 1)
-                    Instantiate(blockerPrefab, new Vector3(i, j + 1, 0), Quaternion.identity);
+                    Instantiate(blockerTop, new Vector3(i, j + 1, 0), Quaternion.identity);
 
 
                 if (i == 0 && j == 0)
-                    Instantiate(blockerPrefab, new Vector3(i - 1, j - 1, 0), Quaternion.identity);
+                    Instantiate(blockerBottomLeft, new Vector3(i - 1, j - 1, 0), Quaternion.identity);
                 if (i == 0 && j == level.GetLength(1) - 1)
-                    Instantiate(blockerPrefab, new Vector3(i - 1, j + 1, 0), Quaternion.identity);
+                    Instantiate(blockerTopLeft, new Vector3(i - 1, j + 1, 0), Quaternion.identity);
 
                 if (i == level.GetLength(0) - 1 && j == 0)
-                    Instantiate(blockerPrefab, new Vector3(i + 1, j - 1, 0), Quaternion.identity);
+                    Instantiate(blockerBottomRight, new Vector3(i + 1, j - 1, 0), Quaternion.identity);
                 if (i == level.GetLength(0) - 1 && j == level.GetLength(1) - 1)
-                    Instantiate(blockerPrefab, new Vector3(i + 1, j + 1, 0), Quaternion.identity);
+                    Instantiate(blockerTopRight, new Vector3(i + 1, j + 1, 0), Quaternion.identity);
             }
         }
     }
@@ -118,20 +120,19 @@ public class LevelGeneration : MonoBehaviour
                 GameObject tile = existingLevel[i].gameObject;
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
+                SpriteRenderer textRenderer = tile.transform.GetChild(1).GetComponent<SpriteRenderer>();
                 SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
                 BoxCollider2D boxCollider = tile.transform.GetChild(2).GetComponent<BoxCollider2D>();
-                SpriteRenderer flagRenderer = tile.transform.GetChild(3).GetComponent<SpriteRenderer>();
-                MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
-                TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
+                //MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
+                //TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
 
                 cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
                 boxCollider.enabled = true;
                 textRenderer.enabled = false;
                 bombRenderer.enabled = false;
-                flagRenderer.enabled = false;
 
-                textMesh.text = cellProperties.neighbours.ToString();
+                //textMesh.text = cellProperties.neighbours.ToString();
                 // if (cellProperties.isRevealed)
                 // {
                 //     tileRenderer.enabled = false;
@@ -158,7 +159,7 @@ public class LevelGeneration : MonoBehaviour
                     if (cellProperties.hasBomb)
                     {
                         bombRenderer.enabled = true;
-                        flagRenderer.enabled = false;
+                        //flagRenderer.enabled = false;
                         textRenderer.enabled = false;
                     }
                     else
@@ -166,14 +167,15 @@ public class LevelGeneration : MonoBehaviour
                         if (cell.NeighbourCount != 0)
                         {
                             textRenderer.enabled = true;
+                            textRenderer.sprite = numbers[cell.NeighbourCount - 1];
                             bombRenderer.enabled = false;
-                            flagRenderer.enabled = false;
-                            textMesh.text = cell.NeighbourCount.ToString();
+                            //flagRenderer.enabled = false;
+                            //textMesh.text = cell.NeighbourCount.ToString();
                         }
                         else
                         {
                             bombRenderer.enabled = false;
-                            flagRenderer.enabled = false;
+                            //flagRenderer.enabled = false;
                             textRenderer.enabled = false;
                         }
                     }
@@ -183,16 +185,18 @@ public class LevelGeneration : MonoBehaviour
                     if (cellProperties.isMarked)
                     {
                         tileRenderer.enabled = true;
+                        tileRenderer.sprite = marked;
                         boxCollider.enabled = true;
-                        flagRenderer.enabled = true;
+                        //flagRenderer.enabled = true;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;
                     }
                     else
                     {
                         tileRenderer.enabled = true;
+                        tileRenderer.sprite = unmarked;
                         boxCollider.enabled = true;
-                        flagRenderer.enabled = false;
+                        //flagRenderer.enabled = false;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;
                     }
