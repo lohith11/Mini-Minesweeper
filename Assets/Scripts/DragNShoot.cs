@@ -9,9 +9,11 @@ public class DragNShoot : MonoBehaviour
     Vector2 startPoint, endPoint, appliedForce, forceVector;
     public bool IsMoving;
     [SerializeField] float airDrag, maxPower, minVelocity, power, minBreakVelocity;
+    [SerializeField] GameObject collisionParticles, trailParticles;
 
     void Start()
     {
+        //trailParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
         IsMoving = false;
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
@@ -22,12 +24,14 @@ public class DragNShoot : MonoBehaviour
         if (rb.velocity.magnitude > minVelocity)
         {
             IsMoving = true;
+            //trailParticles.SetActive(true);
             rb.AddForce(-rb.velocity.normalized * airDrag);
         }
         else
         {
-            rb.velocity = Vector2.zero;
             IsMoving = false;
+            //trailParticles.SetActive(false);
+            rb.velocity = Vector2.zero;
             // if (!GameManager.gameManagerInstance.gameStarted)
             //     GameManager.gameManagerInstance.gameStarted = true;
         }
@@ -60,7 +64,8 @@ public class DragNShoot : MonoBehaviour
         //Debug.Log("Collision with " + other.gameObject.name);
         if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
         {
-            //Debug.Log("Collided!");
+            Instantiate(collisionParticles, other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f), Quaternion.identity);
+            AudioManager.audioManagerInstance.Play("Bump");
             cellProps = other.transform.parent.GetComponent<CellProperties>();
             InputManager.inputManagerInstance.ClickedOnTile(cellProps);
         }
