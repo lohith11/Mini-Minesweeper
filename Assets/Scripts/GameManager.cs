@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         gameManagerInstance = this;
+        gridSize = DataCarrier.gridSize;
     }
     void Start()
     {
