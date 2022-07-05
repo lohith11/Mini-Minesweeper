@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     {
         if (GameManager.gameManagerInstance.gameEnded || GameManager.gameManagerInstance.gamePaused)
             return;
-        if (!GameManager.gameManagerInstance.gameStarted && !GameManager.gameManagerInstance.gameEnded)
+        if (!GameManager.gameManagerInstance.ballSpawned)
         {
             if (Input.GetMouseButtonDown(0))
             {

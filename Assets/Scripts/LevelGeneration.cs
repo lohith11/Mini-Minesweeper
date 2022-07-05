@@ -16,7 +16,7 @@ public class LevelGeneration : MonoBehaviour
         levelGenerationInstance = this;
         switch (DataCarrier.difficulty)
         {
-            case "Easy": bombProbability = 0.1f; break;
+            case "Easy": bombProbability = 0.05f; break;
             case "Medium": bombProbability = 0.15f; break;
             case "Hard": bombProbability = 0.2f; break;
             default: bombProbability = 0.15f; break;

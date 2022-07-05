@@ -18,8 +18,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject pointingArrow;
 
-    public bool gameStarted = false, gameEnded = false, gamePaused = false;
-    bool ballSpawned = false;
+    public bool gameStarted = false, gameEnded = false, gamePaused = false, ballSpawned = false;
     void Awake()
     {
         gameManagerInstance = this;
