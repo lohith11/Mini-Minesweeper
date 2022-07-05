@@ -4,13 +4,20 @@ using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
-    [SerializeField] int maxHealth, tilesPerHealthPoint;
+    [SerializeField] int tilesPerHealthPoint;
     [SerializeField] List<Image> hearts;
-    int health, tilesHit = 0;
+    int maxHealth = 3, health, tilesHit = 0;
     public static HealthManager healthManagerInstance;
     void Awake()
     {
         healthManagerInstance = this;
+        switch (DataCarrier.difficulty)
+        {
+            case "Easy": maxHealth = 5; break;
+            case "Medium": maxHealth = 3; break;
+            case "Hard": maxHealth = 1; break;
+            default: maxHealth = 3; break;
+        }
         health = maxHealth;
     }
 

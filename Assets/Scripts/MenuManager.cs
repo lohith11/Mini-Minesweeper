@@ -7,6 +7,11 @@ public class MenuManager : MonoBehaviour
     [SerializeField] Slider slider;
     [SerializeField] GameObject menuCanvas, settingsCanvas;
 
+    void Start()
+    {
+        DataCarrier.difficulty = "Medium";
+    }
+
     public void StartGame()
     {
         DataCarrier.gridSize = (int)slider.value;
