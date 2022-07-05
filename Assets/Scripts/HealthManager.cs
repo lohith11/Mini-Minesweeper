@@ -43,7 +43,7 @@ public class HealthManager : MonoBehaviour
         hearts[health].enabled = false;
         if (health <= 0)
         {
-            GameManager.gameManagerInstance.GameOver();
+            GameManager.gameManagerInstance.OutOfLives();
         }
     }
 }

@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CellProperties : MonoBehaviour
 {
     public int xCoordinate, yCoordinate, neighbours;
-    public bool hasBomb, isRevealed, isMarked;
+    public bool hasBomb, isRevealed, isMarked, isEndPoint;
 
     public void SetProperties(Cell cell)
     {
@@ -15,5 +13,6 @@ public class CellProperties : MonoBehaviour
         hasBomb = cell.HasBomb;
         isRevealed = cell.IsRevealed;
         isMarked = cell.IsMarked;
+        isEndPoint = cell.IsEndPoint;
     }
 }

@@ -13,7 +13,6 @@ public class DragNShoot : MonoBehaviour
 
     void Start()
     {
-        //trailParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
         IsMoving = false;
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
@@ -24,19 +23,15 @@ public class DragNShoot : MonoBehaviour
         if (rb.velocity.magnitude > minVelocity)
         {
             IsMoving = true;
-            //trailParticles.SetActive(true);
             rb.AddForce(-rb.velocity.normalized * airDrag);
         }
         else
         {
             IsMoving = false;
-            //trailParticles.SetActive(false);
             rb.velocity = Vector2.zero;
-            // if (!GameManager.gameManagerInstance.gameStarted)
-            //     GameManager.gameManagerInstance.gameStarted = true;
         }
 
-        if (!GameManager.gameManagerInstance.gameStarted)
+        if (!GameManager.gameManagerInstance.gameStarted || GameManager.gameManagerInstance.gameEnded || IsMoving)
             return;
 
 
@@ -53,7 +48,6 @@ public class DragNShoot : MonoBehaviour
                 forceVector = startPoint - endPoint;
                 appliedForce = forceVector.normalized * Mathf.Clamp(forceVector.magnitude, -maxPower, maxPower);
                 rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
-                //Debug.Log("Force Vector: " + forceVector + ", Applied Force: " + appliedForce);
             }
         }
     }
@@ -61,13 +55,21 @@ public class DragNShoot : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         CellProperties cellProps;
-        //Debug.Log("Collision with " + other.gameObject.name);
         if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
         {
             Instantiate(collisionParticles, other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f), Quaternion.identity);
             AudioManager.audioManagerInstance.Play("Bump");
             cellProps = other.transform.parent.GetComponent<CellProperties>();
             InputManager.inputManagerInstance.ClickedOnTile(cellProps);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.name == "End")
+        {
+            Debug.Log("Flag touched");
+            GameManager.gameManagerInstance.FlagTouched();
         }
     }
 }

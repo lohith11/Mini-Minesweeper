@@ -44,4 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 544eef0d675613345b474727ce40a984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - source: {fileID: 0}
+    name: Bump
+    clip: {fileID: 8300000, guid: b198e496304fff449ae7e7dc68c00c0a, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  music:
+  - source: {fileID: 0}
+    name: Background
+    clip: {fileID: 8300000, guid: 91eec52a67b5cad499c18c8e9406e153, type: 3}
+    loop: 1
+    volume: 0.2
+    pitch: 1

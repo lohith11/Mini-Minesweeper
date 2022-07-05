@@ -19,13 +19,8 @@ public class TrajectoryLine : MonoBehaviour
     }
     void Update()
     {
-        if (!GameManager.gameManagerInstance.gameStarted)
+        if (!GameManager.gameManagerInstance.gameStarted || GameManager.gameManagerInstance.gameEnded || ball.IsMoving || GameManager.gameManagerInstance.gamePaused)
             return;
-
-        if (ball.IsMoving)
-        {
-            return;
-        }
 
         if (Input.GetMouseButtonDown(0))
         {

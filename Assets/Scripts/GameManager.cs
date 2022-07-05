@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 
 public class GameManager : MonoBehaviour
@@ -15,7 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] float gameStartTimeout;
     [SerializeField] CinemachineVirtualCamera topView, ballFollow;
 
-    public bool gameStarted = false, gameEnded = false;
+    [SerializeField] GameObject pointingArrow;
+
+    public bool gameStarted = false, gameEnded = false, gamePaused = false;
     bool ballSpawned = false;
     void Awake()
     {
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
             {
                 gameStarted = true;
                 CheckReveal();
+                pointingArrow.SetActive(true);
                 ballFollow.Priority = 10;
                 topView.Priority = 5;
             }
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour
         ballFollow.LookAt = ball.transform;
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         FindObjectOfType<TrajectoryLine>().UpdateBallReference();
+        LevelGeneration.levelGenerationInstance.PlaceFinishPoint(startCoordinates);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
         HealthManager.healthManagerInstance.GameStarted();
     }
@@ -66,9 +71,16 @@ public class GameManager : MonoBehaviour
             LevelGeneration.levelGenerationInstance.CheckNeighbours(masterLevel[startCoordinates.x, startCoordinates.y]);
     }
 
-    public void GameOver()
+    public void FlagTouched()
     {
         gameStarted = false;
         gameEnded = true;
+        GetComponent<GameMenuManager>().WinGame();
+    }
+    public void OutOfLives()
+    {
+        gameStarted = false;
+        gameEnded = true;
+        GetComponent<GameMenuManager>().LoseGame();
     }
 }

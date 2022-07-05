@@ -39,4 +39,10 @@ public class MenuManager : MonoBehaviour
         else
             AudioManager.audioManagerInstance.StopAll();
     }
+
+    public void DifficultyChanged(string difficulty)
+    {
+        DataCarrier.difficulty = difficulty;
+        Debug.Log("Difficulty: " + DataCarrier.difficulty);
+    }
 }

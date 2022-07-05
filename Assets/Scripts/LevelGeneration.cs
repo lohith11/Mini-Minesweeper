@@ -3,16 +3,24 @@ using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
 {
-    [SerializeField] float bombProbability;
-    [SerializeField] GameObject cellPrefab, blockerTop, blockerSides, blockerTopLeft, blockerTopRight, blockerBottomLeft, blockerBottomRight;
-    [SerializeField] Sprite marked, unmarked;
     [SerializeField] List<Sprite> numbers;
+    [SerializeField] Sprite marked, unmarked;
+    [SerializeField] GameObject cellPrefab, blockerTop, blockerSides, blockerTopLeft, blockerTopRight, blockerBottomLeft, blockerBottomRight;
     int bombCount = 0;
+    bool locationFound = false;
+    float bombProbability = 0.15f;
     public static LevelGeneration levelGenerationInstance;
 
     void Awake()
     {
         levelGenerationInstance = this;
+        switch (DataCarrier.difficulty)
+        {
+            case "Easy": bombProbability = 0.1f; break;
+            case "Medium": bombProbability = 0.15f; break;
+            case "Hard": bombProbability = 0.2f; break;
+            default: bombProbability = 0.15f; break;
+        }
     }
 
     public Cell[,] GenerateLevel(int rows, int cols)
@@ -123,33 +131,16 @@ public class LevelGeneration : MonoBehaviour
                 SpriteRenderer textRenderer = tile.transform.GetChild(1).GetComponent<SpriteRenderer>();
                 SpriteRenderer tileRenderer = tile.transform.GetChild(2).GetComponent<SpriteRenderer>();
                 BoxCollider2D boxCollider = tile.transform.GetChild(2).GetComponent<BoxCollider2D>();
-                //MeshRenderer textRenderer = tile.transform.GetChild(1).GetComponent<MeshRenderer>();
-                //TextMesh textMesh = tile.transform.GetChild(1).GetComponent<TextMesh>();
+                BoxCollider2D endTrigger = tile.transform.GetChild(3).GetComponent<BoxCollider2D>();
+                SpriteRenderer flagRenderer = tile.transform.GetChild(3).GetComponent<SpriteRenderer>();
 
                 cellProperties.SetProperties(cell);
                 tileRenderer.enabled = true;
                 boxCollider.enabled = true;
                 textRenderer.enabled = false;
                 bombRenderer.enabled = false;
-
-                //textMesh.text = cellProperties.neighbours.ToString();
-                // if (cellProperties.isRevealed)
-                // {
-                //     tileRenderer.enabled = false;
-                // }
-                // if (cellProperties.neighbours != 0)
-                // {
-                //     textRenderer.enabled = true;
-                // }
-                // if (cellProperties.hasBomb)
-                // {
-                //     bombRenderer.enabled = true;
-                //     textRenderer.enabled = false;
-                // }
-                // if (cellProperties.isMarked)
-                // {
-                //     flagRenderer.enabled = true;
-                // }
+                flagRenderer.enabled = false;
+                endTrigger.enabled = false;
 
                 if (cellProperties.isRevealed)
                 {
@@ -159,8 +150,16 @@ public class LevelGeneration : MonoBehaviour
                     if (cellProperties.hasBomb)
                     {
                         bombRenderer.enabled = true;
-                        //flagRenderer.enabled = false;
                         textRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
+                    }
+                    else if (cellProperties.isEndPoint)
+                    {
+                        bombRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                        flagRenderer.enabled = true;
+                        endTrigger.enabled = true;
                     }
                     else
                     {
@@ -169,14 +168,15 @@ public class LevelGeneration : MonoBehaviour
                             textRenderer.enabled = true;
                             textRenderer.sprite = numbers[cell.NeighbourCount - 1];
                             bombRenderer.enabled = false;
-                            //flagRenderer.enabled = false;
-                            //textMesh.text = cell.NeighbourCount.ToString();
+                            flagRenderer.enabled = false;
+                            endTrigger.enabled = false;
                         }
                         else
                         {
                             bombRenderer.enabled = false;
-                            //flagRenderer.enabled = false;
                             textRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            endTrigger.enabled = false;
                         }
                     }
                 }
@@ -187,21 +187,22 @@ public class LevelGeneration : MonoBehaviour
                         tileRenderer.enabled = true;
                         tileRenderer.sprite = marked;
                         boxCollider.enabled = true;
-                        //flagRenderer.enabled = true;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
                     }
                     else
                     {
                         tileRenderer.enabled = true;
                         tileRenderer.sprite = unmarked;
                         boxCollider.enabled = true;
-                        //flagRenderer.enabled = false;
                         textRenderer.enabled = false;
                         bombRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
                     }
                 }
-                //Destroy(existingLevel[i].gameObject);
                 return;
             }
         }
@@ -227,6 +228,23 @@ public class LevelGeneration : MonoBehaviour
                     if (GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].NeighbourCount == 0)
                         CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
                 }
+            }
+        }
+    }
+
+    public void PlaceFinishPoint(Vector2Int ballCoordinates)
+    {
+        while (!locationFound)
+        {
+            int x = UnityEngine.Random.Range(0, GameManager.gameManagerInstance.masterLevel.GetLength(0));
+            int y = UnityEngine.Random.Range(0, GameManager.gameManagerInstance.masterLevel.GetLength(1));
+            Vector2Int finishCoordinates = new Vector2Int(x, y);
+            if ((Vector2Int.Distance(finishCoordinates, ballCoordinates) > (GameManager.gameManagerInstance.gridSize / 2)) && !GameManager.gameManagerInstance.masterLevel[x, y].HasBomb)
+            {
+                locationFound = true;
+                GameManager.gameManagerInstance.masterLevel[x, y].SetEndPoint(true);
+                SetTile(GameManager.gameManagerInstance.masterLevel[x, y]);
+                Debug.Log("Finish point placed at " + finishCoordinates);
             }
         }
     }
