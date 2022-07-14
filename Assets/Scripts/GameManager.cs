@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         masterLevel = LevelGeneration.levelGenerationInstance.GenerateLevel(gridSize, gridSize);
-        topView.transform.position = new Vector3(gridSize / 2, gridSize / 2, -10);
+        topView.transform.position = new Vector3(gridSize / 2, (gridSize / 2) - 0.5f, -10);
         topView.m_Lens.OrthographicSize = (gridSize / 2) + 1;
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }

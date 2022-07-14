@@ -55,7 +55,7 @@ public class DragNShoot : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         CellProperties cellProps;
-        if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
+        if ((other.gameObject.name == "Tile" || other.gameObject.tag == "Wall") && rb.velocity.magnitude > minBreakVelocity)
         {
             Instantiate(collisionParticles, other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f), Quaternion.identity);
             AudioManager.audioManagerInstance.Play("Bump");

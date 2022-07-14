@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 5177869908664032894}
   m_Layer: 0
   m_Name: BlockerSides
-  m_TagString: Cell
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

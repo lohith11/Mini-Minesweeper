@@ -50,4 +50,10 @@ public class MenuManager : MonoBehaviour
         DataCarrier.difficulty = difficulty;
         Debug.Log("Difficulty: " + DataCarrier.difficulty);
     }
+
+    public void HeartsChanged(string hearts)
+    {
+        DataCarrier.hearts = hearts;
+        Debug.Log("Hearts: " + DataCarrier.hearts);
+    }
 }

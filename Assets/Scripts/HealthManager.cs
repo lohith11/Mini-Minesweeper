@@ -7,15 +7,17 @@ public class HealthManager : MonoBehaviour
     [SerializeField] int tilesPerHealthPoint;
     [SerializeField] List<Image> hearts;
     int maxHealth = 3, health, tilesHit = 0;
+    bool godMode = false;
     public static HealthManager healthManagerInstance;
     void Awake()
     {
         healthManagerInstance = this;
-        switch (DataCarrier.difficulty)
+        switch (DataCarrier.hearts)
         {
-            case "Easy": maxHealth = 5; break;
-            case "Medium": maxHealth = 3; break;
-            case "Hard": maxHealth = 1; break;
+            case "1": maxHealth = 1; break;
+            case "3": maxHealth = 3; break;
+            case "5": maxHealth = 5; break;
+            case "-1": maxHealth = 1; godMode = true; break;
             default: maxHealth = 3; break;
         }
         health = maxHealth;
@@ -24,7 +26,6 @@ public class HealthManager : MonoBehaviour
     public void GameStarted()
     {
         tilesHit = 0;
-        //Debug.Log("Game started");
         for (int i = 0; i < maxHealth; i++)
         {
             hearts[i].enabled = true;
@@ -45,6 +46,8 @@ public class HealthManager : MonoBehaviour
     }
     public void BombHit()
     {
+        if (godMode)
+            return;
         health--;
         tilesHit = 0;
         hearts[health].enabled = false;
