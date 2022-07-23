@@ -390,7 +390,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7758621, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3957,7 +3957,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7758621, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -5573,8 +5573,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dc68d76b28af9b940a6158174f6897c9, type: 3}
   - {fileID: 21300000, guid: 325a343108faa3a4a9093306958ee11e, type: 3}
   - {fileID: 21300000, guid: 04bb108d788fceb4c95d1c0ccb1339a4, type: 3}
-  marked: {fileID: 21300000, guid: bbcbb0435f47c6c43a1bc22937949888, type: 3}
-  unmarked: {fileID: 21300000, guid: 353983b6354c4d640aa3b3be6d1220c0, type: 3}
+  marked: {fileID: 21300000, guid: b49c6cc048e7e4644bc7233e98a12e65, type: 3}
+  unmarked: {fileID: 21300000, guid: 4d5481f7ae1dab94f843e3b2c041e655, type: 3}
   cellPrefab: {fileID: 4531194104982949465, guid: 2b74d096f2079404db93ef0119188040, type: 3}
   blockerTop: {fileID: 4531194104982949465, guid: 8541524410a4e5249ae3b0ffccbef0a7, type: 3}
   blockerSides: {fileID: 4531194104982949465, guid: 4e4d31e12f766e24088e6eafd2fdab5d, type: 3}
