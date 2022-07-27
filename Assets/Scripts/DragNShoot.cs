@@ -8,6 +8,7 @@ public class DragNShoot : MonoBehaviour
     Camera cam;
     Vector2 startPoint, endPoint, appliedForce, forceVector;
     public bool IsMoving;
+    bool aimingStarted = false;
     [SerializeField] float airDrag, maxPower, minVelocity, power, minBreakVelocity;
     [SerializeField] GameObject collisionParticles, trailParticles;
 
@@ -40,14 +41,16 @@ public class DragNShoot : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+                aimingStarted = true;
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) && aimingStarted)
             {
                 endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
                 forceVector = startPoint - endPoint;
                 appliedForce = forceVector.normalized * Mathf.Clamp(forceVector.magnitude, -maxPower, maxPower);
                 rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
+                aimingStarted = false;
             }
         }
     }

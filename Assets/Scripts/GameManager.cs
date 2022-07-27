@@ -3,19 +3,20 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] public Cell[,] masterLevel;
     [SerializeField] GameObject ballPrefab;
     [SerializeField] float gameStartTimeout;
     [SerializeField] CinemachineVirtualCamera topView, ballFollow;
     [SerializeField] GameObject pointingArrow, healthImage, timer;
-    [SerializeField] List<Sprite> digits;
-    [SerializeField] Image secondDigit1, secondDigit2, minuteDigit1, minuteDigit2;
+    [SerializeField] TMP_Text timerText;
+    GameObject ball;
     public int gridSize;
-    public Cell[,] masterLevel;
     public static GameManager gameManagerInstance;
-    public bool gameStarted = false, gameEnded = false, gamePaused = false, ballSpawned = false;
+    [HideInInspector] public bool gameStarted = false, gameEnded = false, gamePaused = false, ballSpawned = false, sneakpeek = false;
     Vector2Int startCoordinates;
     float timeSinceStart = 0f;
     int timeCounter = 0;
@@ -51,13 +52,16 @@ public class GameManager : MonoBehaviour
                 topView.Priority = 5;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            SneakPeak();
     }
 
     public void StartGame(Vector2 coordinates)
     {
         startCoordinates = new Vector2Int((int)coordinates.x, (int)coordinates.y);
         ballSpawned = true;
-        GameObject ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
+        ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
         ballFollow.Follow = ball.transform;
         ballFollow.LookAt = ball.transform;
         ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -92,17 +96,26 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             timeCounter++;
-            int m = (timeCounter / 60) % 60;
-            int m1 = (m / 10) % 10;
-            int m2 = m % 10;
+            string time = string.Format("{0:00}:{1:00}", (timeCounter / 60) % 60, timeCounter % 60);
+            timerText.text = time;
+        }
+    }
 
-            int s = timeCounter % 60;
-            int s1 = (s / 10) % 10;
-            int s2 = s % 10;
-            minuteDigit1.sprite = digits[m1];
-            minuteDigit2.sprite = digits[m2];
-            secondDigit1.sprite = digits[s1];
-            secondDigit2.sprite = digits[s2];
+    void SneakPeak()
+    {
+        sneakpeek = !sneakpeek;
+        GameObject[] cells = GameObject.FindGameObjectsWithTag("Cell");
+        Debug.Log(cells.Length);
+        for (int i = 0; i < cells.Length; i++)
+        {
+            float a;
+            if (sneakpeek)
+                a = 0.0f;
+            else
+                a = 1.0f;
+            Color tempColor = cells[i].transform.GetChild(2).GetComponent<SpriteRenderer>().color;
+            tempColor.a = a;
+            cells[i].transform.GetChild(2).GetComponent<SpriteRenderer>().color = tempColor;
         }
     }
 }
