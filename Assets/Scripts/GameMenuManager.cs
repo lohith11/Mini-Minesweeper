@@ -46,6 +46,8 @@ public class GameMenuManager : MonoBehaviour
     }
     public void MainMenu()
     {
+        DataCarrier.difficulty = "Medium";
+        DataCarrier.hearts = "3";
         Time.timeScale = 1;
         SceneManager.LoadScene("Menu");
     }

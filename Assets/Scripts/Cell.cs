@@ -81,4 +81,8 @@ public class Cell
     {
         neighbours += n;
     }
+    public void SetNeighbours(int n)
+    {
+        neighbours = n;
+    }
 }
