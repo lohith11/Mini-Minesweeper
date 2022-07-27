@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
-{
+{ 
     [SerializeField] Slider slider;
     [SerializeField] GameObject menuCanvas, settingsCanvas;
 
@@ -56,4 +56,8 @@ public class MenuManager : MonoBehaviour
         DataCarrier.hearts = hearts;
         Debug.Log("Hearts: " + DataCarrier.hearts);
     }
+
+
+
+ 
 }
