@@ -6181,7 +6181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballPrefab: {fileID: 588245352399077619, guid: c081bf60f91bd9549893b1efc39e4d49, type: 3}
-  gameStartTimeout: 2
+  gameStartTimeout: 0.5
   topView: {fileID: 1262740259}
   ballFollow: {fileID: 65446081}
   pointingArrow: {fileID: 265095397}
