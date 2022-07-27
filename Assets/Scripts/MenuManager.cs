@@ -12,9 +12,8 @@ public class MenuManager : MonoBehaviour
         DataCarrier.difficulty = "Medium";
     }
 
-    public void StartGame(string gameMode = "Custom Game")
+    public void StartGame()
     {
-        DataCarrier.gameMode = gameMode;
         DataCarrier.gridSize = (int)slider.value;
         SceneManager.LoadScene("Level");
     }

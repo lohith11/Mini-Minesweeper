@@ -11,8 +11,6 @@ public class LevelGeneration : MonoBehaviour
     float bombProbability = 0.15f;
     public static LevelGeneration levelGenerationInstance;
 
-    public bool peeking = false;
-
     void Awake()
     {
         levelGenerationInstance = this;
@@ -144,38 +142,67 @@ public class LevelGeneration : MonoBehaviour
                 flagRenderer.enabled = false;
                 endTrigger.enabled = false;
 
-                if (cellProperties.isEndPoint)
-                {
-                    textRenderer.enabled = false;
-                    flagRenderer.enabled = true;
-                    endTrigger.enabled = true;
-                }
-
-                if (cellProperties.hasBomb)
-                    bombRenderer.enabled = true;
-
-                if (cellProperties.neighbours != 0)
-                {
-                    textRenderer.enabled = true;
-                    textRenderer.sprite = numbers[cellProperties.neighbours - 1];
-                }
-
-                if (cellProperties.isMarked)
-                    tileRenderer.sprite = marked;
-                else
-                    tileRenderer.sprite = unmarked;
-
                 if (cellProperties.isRevealed)
                 {
                     tileRenderer.enabled = false;
                     boxCollider.enabled = false;
+
+                    if (cellProperties.hasBomb)
+                    {
+                        bombRenderer.enabled = true;
+                        textRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
+                    }
+                    else if (cellProperties.isEndPoint)
+                    {
+                        bombRenderer.enabled = false;
+                        textRenderer.enabled = false;
+                        flagRenderer.enabled = true;
+                        endTrigger.enabled = true;
+                    }
+                    else
+                    {
+                        if (cell.NeighbourCount != 0)
+                        {
+                            textRenderer.enabled = true;
+                            textRenderer.sprite = numbers[cell.NeighbourCount - 1];
+                            bombRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            endTrigger.enabled = false;
+                        }
+                        else
+                        {
+                            bombRenderer.enabled = false;
+                            textRenderer.enabled = false;
+                            flagRenderer.enabled = false;
+                            endTrigger.enabled = false;
+                        }
+                    }
                 }
                 else
                 {
-                    tileRenderer.enabled = true;
-                    boxCollider.enabled = true;
+                    if (cellProperties.isMarked)
+                    {
+                        tileRenderer.enabled = true;
+                        tileRenderer.sprite = marked;
+                        boxCollider.enabled = true;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
+                    }
+                    else
+                    {
+                        tileRenderer.enabled = true;
+                        tileRenderer.sprite = unmarked;
+                        boxCollider.enabled = true;
+                        textRenderer.enabled = false;
+                        bombRenderer.enabled = false;
+                        flagRenderer.enabled = false;
+                        endTrigger.enabled = false;
+                    }
                 }
-
                 return;
             }
         }

@@ -1,37 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro;
 
 public class HealthManager : MonoBehaviour
 {
-    public static HealthManager healthManagerInstance;
     [SerializeField] int tilesPerHealthPoint;
-    [SerializeField] TMP_Text healthText;
-    int maxHealth, health, tilesHit = 0;
+    [SerializeField] List<Sprite> digits;
+    [SerializeField] Image digit1, digit2;
+    int maxHealth = 3, health, tilesHit = 0;
     bool godMode = false;
+    public static HealthManager healthManagerInstance;
     void Awake()
     {
         healthManagerInstance = this;
-        if (DataCarrier.gameMode == "Quick Game")
+        switch (DataCarrier.hearts)
         {
-            switch (DataCarrier.difficulty)
-            {
-                case "Easy": maxHealth = 5; break;
-                case "Medium": maxHealth = 3; break;
-                case "Hard": maxHealth = 3; break;
-            }
-        }
-        else
-        {
-            switch (DataCarrier.hearts)
-            {
-                case "1": maxHealth = 1; break;
-                case "3": maxHealth = 3; break;
-                case "5": maxHealth = 5; break;
-                case "-1": maxHealth = 9; godMode = true; break;
-                default: maxHealth = 3; break;
-            }
+            case "1": maxHealth = 1; break;
+            case "3": maxHealth = 3; break;
+            case "5": maxHealth = 5; break;
+            case "-1": maxHealth = 99; godMode = true; break;
+            default: maxHealth = 3; break;
         }
         health = maxHealth;
     }
@@ -69,6 +57,9 @@ public class HealthManager : MonoBehaviour
 
     public void UpdateHealth()
     {
-        healthText.text = "X" + health.ToString();
+        int two = health % 10;
+        int one = (health / 10) % 10;
+        digit1.sprite = digits[one];
+        digit2.sprite = digits[two];
     }
 }
