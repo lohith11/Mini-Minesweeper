@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Cell
 {
     int xCoordinate, yCoordinate, neighbours = 0;
