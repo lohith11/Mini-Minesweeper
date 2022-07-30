@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
-{ 
+{
     [SerializeField] Slider slider;
     [SerializeField] GameObject menuCanvas, settingsCanvas;
 
@@ -14,6 +14,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame(string gameMode = "Custom Game")
     {
+        Debug.Log("Going to scene!");
         DataCarrier.gameMode = gameMode;
         DataCarrier.gridSize = (int)slider.value;
         SceneManager.LoadScene("Level");
@@ -40,6 +41,7 @@ public class MenuManager : MonoBehaviour
     {
         DataCarrier.musicEnabled = !DataCarrier.musicEnabled;
         Debug.Log("Music enabled: " + DataCarrier.musicEnabled);
+
         if (DataCarrier.musicEnabled)
             AudioManager.audioManagerInstance.ChangeTrack();
         else
@@ -57,8 +59,4 @@ public class MenuManager : MonoBehaviour
         DataCarrier.hearts = hearts;
         Debug.Log("Hearts: " + DataCarrier.hearts);
     }
-
-
-
- 
 }

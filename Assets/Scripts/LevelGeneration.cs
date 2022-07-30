@@ -144,12 +144,6 @@ public class LevelGeneration : MonoBehaviour
                 flagRenderer.enabled = false;
                 endTrigger.enabled = false;
 
-                if (cellProperties.isEndPoint)
-                {
-                    textRenderer.enabled = false;
-                    flagRenderer.enabled = true;
-                    endTrigger.enabled = true;
-                }
 
                 if (cellProperties.hasBomb)
                     bombRenderer.enabled = true;
@@ -165,6 +159,12 @@ public class LevelGeneration : MonoBehaviour
                 else
                     tileRenderer.sprite = unmarked;
 
+                if (cellProperties.isEndPoint)
+                {
+                    textRenderer.enabled = false;
+                    flagRenderer.enabled = true;
+                    endTrigger.enabled = true;
+                }
                 if (cellProperties.isRevealed)
                 {
                     tileRenderer.enabled = false;
