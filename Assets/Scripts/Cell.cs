@@ -65,6 +65,7 @@ public class Cell
             HealthManager.healthManagerInstance.TileRevealed();
 
         isRevealed = b;
+        AudioManager.audioManagerInstance.Play("Break");
     }
 
     public void SetMarked(bool b)

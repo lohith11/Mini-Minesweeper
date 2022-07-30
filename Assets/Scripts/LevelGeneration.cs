@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour
@@ -6,6 +7,7 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField] List<Sprite> numbers;
     [SerializeField] Sprite marked, unmarked;
     [SerializeField] GameObject cellPrefab, blockerTop, blockerSides, blockerTopLeft, blockerTopRight, blockerBottomLeft, blockerBottomRight;
+    [SerializeField] float emptyRevealDelay;
     int bombCount = 0;
     bool locationFound = false;
     float bombProbability = 0.15f;
@@ -199,7 +201,9 @@ public class LevelGeneration : MonoBehaviour
                     GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].SetRevealed(true);
                     SetTile(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
                     if (GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y].NeighbourCount == 0)
+                    {
                         CheckNeighbours(GameManager.gameManagerInstance.masterLevel[cell.Coordinates.x + x, cell.Coordinates.y + y]);
+                    }
                 }
             }
         }

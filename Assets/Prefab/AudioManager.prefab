@@ -46,14 +46,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - source: {fileID: 0}
+    name: GolfClub
+    clip: {fileID: 8300000, guid: 81e2cb0820aeb6743bf6a4d132513d73, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
     name: Bump
-    clip: {fileID: 8300000, guid: b198e496304fff449ae7e7dc68c00c0a, type: 3}
+    clip: {fileID: 8300000, guid: e99f8aaea23ae244ab99ad19ef3958dd, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: Break
+    clip: {fileID: 8300000, guid: a33ca6ff7762e5b48a767f9ba8e8f204, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: Mark
+    clip: {fileID: 8300000, guid: 2c3bda8905254f84db6f137157c8c535, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: Lose
+    clip: {fileID: 8300000, guid: 6fda36d4fcc224f4c82865381892b3fc, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: Win
+    clip: {fileID: 8300000, guid: 892cfed15df33bb4d87a67ab323be071, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: Click
+    clip: {fileID: 8300000, guid: f32ed090311911b45831b4853a35303c, type: 3}
     loop: 0
     volume: 0.5
     pitch: 1
   music:
   - source: {fileID: 0}
-    name: Background
+    name: Background1
     clip: {fileID: 8300000, guid: 91eec52a67b5cad499c18c8e9406e153, type: 3}
     loop: 1
     volume: 0.2

@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
     {
         sneakpeek = !sneakpeek;
         GameObject[] cells = GameObject.FindGameObjectsWithTag("Cell");
-        Debug.Log(cells.Length);
         for (int i = 0; i < cells.Length; i++)
         {
             float a;

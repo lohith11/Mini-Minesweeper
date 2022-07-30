@@ -10,7 +10,7 @@ public class DragNShoot : MonoBehaviour
     public bool IsMoving;
     bool aimingStarted = false;
     [SerializeField] float airDrag, maxPower, minVelocity, power, minBreakVelocity;
-    [SerializeField] GameObject collisionParticles, trailParticles;
+    [SerializeField] GameObject collisionParticlesTile, trailParticles, collisionParticlesWall;
 
     void Start()
     {
@@ -50,6 +50,7 @@ public class DragNShoot : MonoBehaviour
                 forceVector = startPoint - endPoint;
                 appliedForce = forceVector.normalized * Mathf.Clamp(forceVector.magnitude, -maxPower, maxPower);
                 rb.AddForce(appliedForce * power, ForceMode2D.Impulse);
+                AudioManager.audioManagerInstance.Play("GolfClub");
                 aimingStarted = false;
             }
         }
@@ -58,13 +59,18 @@ public class DragNShoot : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         CellProperties cellProps;
-        if ((other.gameObject.name == "Tile" || other.gameObject.tag == "Wall") && rb.velocity.magnitude > minBreakVelocity)
+        Vector3 particlePosition = other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f);
+
+        if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
         {
-            Instantiate(collisionParticles, other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f), Quaternion.identity);
-            AudioManager.audioManagerInstance.Play("Bump");
+            Instantiate(collisionParticlesTile, particlePosition, Quaternion.identity);
             cellProps = other.transform.parent.GetComponent<CellProperties>();
             InputManager.inputManagerInstance.ClickedOnTile(cellProps);
         }
+        else if (other.transform.parent.gameObject.tag == "Wall")
+            Instantiate(collisionParticlesWall, particlePosition, Quaternion.identity);
+
+        AudioManager.audioManagerInstance.Play("Bump");
     }
 
     void OnTriggerEnter2D(Collider2D other)
