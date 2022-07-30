@@ -46,8 +46,6 @@ public class AudioManager : MonoBehaviour
 
     public void Play(string name)
     {
-        if (!DataCarrier.musicEnabled)
-            return;
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
@@ -59,23 +57,9 @@ public class AudioManager : MonoBehaviour
 
     public void ChangeTrack()
     {
-        if (!DataCarrier.musicEnabled)
-            return;
         int trackNumber = UnityEngine.Random.Range(0, music.Length);
         Sound m = music[trackNumber];
         m.source.Play();
         Invoke("ChangeTrack", m.clip.length);
-    }
-
-    public void StopAll()
-    {
-        foreach (Sound s in sounds)
-        {
-            s.source.Stop();
-        }
-        foreach (Sound m in music)
-        {
-            m.source.Stop();
-        }
     }
 }

@@ -79,12 +79,14 @@ public class GameManager : MonoBehaviour
 
     public void FlagTouched()
     {
+        AudioManager.audioManagerInstance.Play("Win");
         gameStarted = false;
         gameEnded = true;
         GetComponent<GameMenuManager>().WinGame();
     }
     public void OutOfLives()
     {
+        AudioManager.audioManagerInstance.Play("Lose");
         gameStarted = false;
         gameEnded = true;
         GetComponent<GameMenuManager>().LoseGame();

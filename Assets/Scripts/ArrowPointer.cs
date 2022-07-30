@@ -22,7 +22,6 @@ public class ArrowPointer : MonoBehaviour
     {
         Vector2 aimingVector = targetTransform.position - ballTransform.position;
         float lookAngle = Mathf.Atan2(aimingVector.y, aimingVector.x) * Mathf.Rad2Deg;
-        //Debug.Log(lookAngle);
         transform.rotation = Quaternion.Euler(0, 0, lookAngle);
     }
 }

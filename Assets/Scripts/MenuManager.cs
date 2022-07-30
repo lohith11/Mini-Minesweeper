@@ -14,7 +14,6 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame(string gameMode = "Custom Game")
     {
-        Debug.Log("Going to scene!");
         DataCarrier.gameMode = gameMode;
         DataCarrier.gridSize = (int)slider.value;
         SceneManager.LoadScene("Level");
@@ -35,17 +34,6 @@ public class MenuManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void AudioToggleChanged()
-    {
-        DataCarrier.musicEnabled = !DataCarrier.musicEnabled;
-        Debug.Log("Music enabled: " + DataCarrier.musicEnabled);
-
-        if (DataCarrier.musicEnabled)
-            AudioManager.audioManagerInstance.ChangeTrack();
-        else
-            AudioManager.audioManagerInstance.StopAll();
     }
 
     public void DifficultyChanged(string difficulty)

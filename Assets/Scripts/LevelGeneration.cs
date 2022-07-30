@@ -43,7 +43,6 @@ public class LevelGeneration : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Bomb count: " + bombCount);
         return level;
     }
 
@@ -181,7 +180,6 @@ public class LevelGeneration : MonoBehaviour
                 return;
             }
         }
-        Debug.Log("Tile " + cell.Coordinates + " not found");
     }
 
     public void CheckNeighbours(Cell cell)
@@ -221,7 +219,6 @@ public class LevelGeneration : MonoBehaviour
                 locationFound = true;
                 GameManager.gameManagerInstance.masterLevel[x, y].SetEndPoint(true);
                 SetTile(GameManager.gameManagerInstance.masterLevel[x, y]);
-                Debug.Log("Finish point placed at " + finishCoordinates);
             }
         }
     }

@@ -1,9 +1,10 @@
 using UnityEngine;
+using Cinemachine;
 
 public class InputManager : MonoBehaviour
 {
     public static InputManager inputManagerInstance;
-    public CellProperties StartProperties;
+    [HideInInspector] public CellProperties StartProperties;
     void Awake()
     {
         inputManagerInstance = this;
@@ -46,21 +47,15 @@ public class InputManager : MonoBehaviour
     public void ClickedOnTile(CellProperties cellProps)
     {
         if (cellProps.isMarked)
-        {
-            Debug.Log("Tile marked");
             return;
-        }
         else if (cellProps.isRevealed)
-        {
-            Debug.Log("Tile already revealed");
             return;
-        }
 
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetRevealed(true);
+        AudioManager.audioManagerInstance.Play("Break");
 
         if (cellProps.hasBomb)
         {
-            Debug.Log("Bomb hit!");
             HealthManager.healthManagerInstance.BombHit();
             LevelGeneration.levelGenerationInstance.SetTile(GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate]);
             return;
@@ -77,15 +72,12 @@ public class InputManager : MonoBehaviour
             return;
 
         CellProperties cellProps = hit.collider.gameObject.transform.GetComponentInParent<CellProperties>();
-        Debug.Log("Clicked on " + cellProps.xCoordinate + ", " + cellProps.yCoordinate);
         GameManager.gameManagerInstance.masterLevel[cellProps.xCoordinate, cellProps.yCoordinate].SetMarked(true);
 
         if (cellProps.isRevealed)
-        {
-            Debug.Log("Tile already revealed");
             return;
-        }
 
+        AudioManager.audioManagerInstance.Play("Mark");
         if (cellProps.isMarked)
         {
             cellProps.isMarked = false;
