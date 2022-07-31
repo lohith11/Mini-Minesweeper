@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameMenuManager : MonoBehaviour
@@ -8,6 +7,7 @@ public class GameMenuManager : MonoBehaviour
     Vector2 ballVelocity;
     public void PauseGame()
     {
+        AudioManager.audioManagerInstance.Play("Click");
         if (GameManager.gameManagerInstance.gameStarted)
             ballVelocity = FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().velocity;
         GameManager.gameManagerInstance.gamePaused = true;
@@ -17,6 +17,7 @@ public class GameMenuManager : MonoBehaviour
     }
     public void ResumeGame()
     {
+        AudioManager.audioManagerInstance.Play("Click");
         GameManager.gameManagerInstance.gamePaused = false;
         gameCanvas.SetActive(true);
         pauseCanvas.SetActive(false);
@@ -29,6 +30,7 @@ public class GameMenuManager : MonoBehaviour
     }
     public void RestartGame()
     {
+        AudioManager.audioManagerInstance.Play("Click");
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -46,9 +48,8 @@ public class GameMenuManager : MonoBehaviour
     }
     public void MainMenu()
     {
-        DataCarrier.difficulty = "Medium";
-        DataCarrier.hearts = "3";
+        AudioManager.audioManagerInstance.Play("Click");
         Time.timeScale = 1;
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("New Menu");
     }
 }

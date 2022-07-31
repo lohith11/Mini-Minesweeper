@@ -92,5 +92,5 @@ MonoBehaviour:
     name: Background1
     clip: {fileID: 8300000, guid: 91eec52a67b5cad499c18c8e9406e153, type: 3}
     loop: 1
-    volume: 0.1
+    volume: 0.05
     pitch: 1

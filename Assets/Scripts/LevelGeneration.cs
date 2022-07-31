@@ -18,13 +18,17 @@ public class LevelGeneration : MonoBehaviour
     void Awake()
     {
         levelGenerationInstance = this;
-        switch (DataCarrier.difficulty)
+
+        string difficulty = PlayerPrefs.GetString(PlayerPrefs.GetString("GameMode") + ".Difficulty");
+        switch (difficulty)
         {
             case "Easy": bombProbability = 0.05f; break;
             case "Medium": bombProbability = 0.15f; break;
             case "Hard": bombProbability = 0.2f; break;
             default: bombProbability = 0.15f; break;
         }
+
+        Debug.Log("Difficulty: " + difficulty);
     }
 
     public Cell[,] GenerateLevel(int rows, int cols)
@@ -48,6 +52,8 @@ public class LevelGeneration : MonoBehaviour
 
     public Cell[,] SetNeighbours(Cell[,] level)
     {
+        Debug.Log("Setting neighbours");
+
         for (int i = 0; i < level.GetLength(0); i++)
         {
             for (int j = 0; j < level.GetLength(1); j++)
@@ -129,6 +135,7 @@ public class LevelGeneration : MonoBehaviour
             if (existingLevel[i].xCoordinate == cell.Coordinates.x && existingLevel[i].yCoordinate == cell.Coordinates.y)
             {
                 GameObject tile = existingLevel[i].gameObject;
+                
                 CellProperties cellProperties = tile.GetComponent<CellProperties>();
                 SpriteRenderer bombRenderer = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
                 SpriteRenderer textRenderer = tile.transform.GetChild(1).GetComponent<SpriteRenderer>();

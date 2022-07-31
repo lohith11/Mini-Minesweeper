@@ -13,25 +13,26 @@ public class HealthManager : MonoBehaviour
     void Awake()
     {
         healthManagerInstance = this;
-        if (DataCarrier.gameMode == "Quick Game")
+
+        switch (PlayerPrefs.GetString("GameMode"))
         {
-            switch (DataCarrier.difficulty)
-            {
-                case "Easy": maxHealth = 5; break;
-                case "Medium": maxHealth = 3; break;
-                case "Hard": maxHealth = 3; break;
-            }
+            case "Quick":
+                switch (PlayerPrefs.GetString("Quick.Difficulty"))
+                {
+                    case "Easy": maxHealth = 5; break;
+                    case "Medium": maxHealth = 3; break;
+                    case "Hard": maxHealth = 2; break;
+                    default: maxHealth = 3; break;
+                }
+                break;
+            case "Zen": maxHealth = PlayerPrefs.GetInt("Zen.Hearts"); break;
+            case "Custom": maxHealth = PlayerPrefs.GetInt("Custom.Hearts"); break;
         }
-        else
+        Debug.Log("Max Health: " + maxHealth);
+        if (maxHealth == -1)
         {
-            switch (DataCarrier.hearts)
-            {
-                case "1": maxHealth = 1; break;
-                case "3": maxHealth = 3; break;
-                case "5": maxHealth = 5; break;
-                case "-1": maxHealth = 9; godMode = true; break;
-                default: maxHealth = 3; break;
-            }
+            godMode = true;
+            maxHealth = 9;
         }
         health = maxHealth;
     }
@@ -62,9 +63,7 @@ public class HealthManager : MonoBehaviour
         tilesHit = 0;
         UpdateHealth();
         if (health <= 0)
-        {
-            GameManager.gameManagerInstance.OutOfLives();
-        }
+            StartCoroutine(GameManager.gameManagerInstance.OutOfLives());
     }
 
     public void UpdateHealth()

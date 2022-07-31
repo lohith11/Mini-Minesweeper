@@ -76,6 +76,7 @@ public class DragNShoot : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "End")
-            GameManager.gameManagerInstance.FlagTouched();
+            StartCoroutine(GameManager.gameManagerInstance.FlagTouched());
+
     }
 }

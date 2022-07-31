@@ -23,13 +23,14 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         gameManagerInstance = this;
-        gridSize = DataCarrier.gridSize;
+        gridSize = PlayerPrefs.GetInt(PlayerPrefs.GetString("GameMode") + ".GridSize");
+        Debug.Log("Grid size: " + gridSize);
     }
     void Start()
     {
+        topView.transform.position = new Vector3(gridSize / 2f, (gridSize / 2f) - 0.5f, -10);
+        topView.m_Lens.OrthographicSize = (gridSize / 2) + 2;
         masterLevel = LevelGeneration.levelGenerationInstance.GenerateLevel(gridSize, gridSize);
-        topView.transform.position = new Vector3(gridSize / 2, (gridSize / 2) - 0.5f, -10);
-        topView.m_Lens.OrthographicSize = (gridSize / 2) + 1;
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);
     }
 
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour
                 pointingArrow.SetActive(true);
                 healthImage.SetActive(true);
                 timer.SetActive(true);
-                ballFollow.Priority = 10;
-                topView.Priority = 5;
+                ballFollow.enabled = true;
+                topView.enabled = false;
             }
         }
 
@@ -77,18 +78,26 @@ public class GameManager : MonoBehaviour
             LevelGeneration.levelGenerationInstance.CheckNeighbours(masterLevel[startCoordinates.x, startCoordinates.y]);
     }
 
-    public void FlagTouched()
+    public IEnumerator FlagTouched()
     {
         AudioManager.audioManagerInstance.Play("Win");
         gameStarted = false;
         gameEnded = true;
+        ballFollow.enabled = false;
+        topView.enabled = true;
+
+        yield return null;
         GetComponent<GameMenuManager>().WinGame();
     }
-    public void OutOfLives()
+    public IEnumerator OutOfLives()
     {
         AudioManager.audioManagerInstance.Play("Lose");
         gameStarted = false;
         gameEnded = true;
+        ballFollow.enabled = false;
+        topView.enabled = true;
+
+        yield return null;
         GetComponent<GameMenuManager>().LoseGame();
     }
 
