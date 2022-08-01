@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         {
             float a;
             if (sneakpeek)
-                a = 0.0f;
+                a = 1.0f;
             else
                 a = 1.0f;
             Color tempColor = cells[i].transform.GetChild(2).GetComponent<SpriteRenderer>().color;

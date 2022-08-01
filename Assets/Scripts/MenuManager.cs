@@ -3,11 +3,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using Michsky.UI.ModernUIPack;
+using System.Collections;
 
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] Slider slider;
     [SerializeField] GameObject quickMask, customMask, zenMask;
+    [SerializeField] float animationDelay;
 
     void Start()
     {
@@ -32,6 +34,7 @@ public class MenuManager : MonoBehaviour
 
     public void GameModeSelected(string gameMode)
     {
+        ResePositions();
         PlayerPrefs.SetString("GameMode", gameMode);
         AudioManager.audioManagerInstance.Play("Click");
         if (gameMode == "Quick")
@@ -49,9 +52,9 @@ public class MenuManager : MonoBehaviour
                 case "Hard": index = 2; break;
                 default: index = 1; break;
             }
+
             quickMask.transform.GetChild(0).GetComponent<TMP_Text>().text = "Grid Size: " + PlayerPrefs.GetInt("Quick.GridSize");
             quickMask.transform.GetChild(1).transform.GetChild(0).GetComponent<HorizontalSelector>().defaultIndex = index;
-
         }
 
         else if (gameMode == "Custom")
@@ -79,7 +82,6 @@ public class MenuManager : MonoBehaviour
             customMask.transform.GetChild(0).transform.GetChild(0).GetComponent<SliderManager>().mainSlider.value = PlayerPrefs.GetInt("Custom.GridSize");
             customMask.transform.GetChild(1).transform.GetChild(0).GetComponent<HorizontalSelector>().defaultIndex = difficultyIndex;
             customMask.transform.GetChild(2).transform.GetChild(0).GetComponent<HorizontalSelector>().defaultIndex = healthIndex;
-
         }
 
         else if (gameMode == "Zen")
@@ -88,6 +90,7 @@ public class MenuManager : MonoBehaviour
             customMask.SetActive(false);
             zenMask.SetActive(true);
         }
+        StartCoroutine(AnimateStuff());
     }
 
     public void DifficultyChanged(string difficulty)
@@ -113,5 +116,63 @@ public class MenuManager : MonoBehaviour
     {
         AudioManager.audioManagerInstance.Play("Click");
         SceneManager.LoadScene("Level");
+    }
+
+    public void ResePositions()
+    {
+        RectTransform rt;
+        for (int i = 0; i < quickMask.transform.childCount; i++)
+        {
+            rt = quickMask.transform.GetChild(i).GetComponent<RectTransform>();
+            rt.localPosition = new Vector3(-500, rt.localPosition.y, rt.localPosition.z);
+        }
+        for (int i = 0; i < customMask.transform.childCount; i++)
+        {
+            rt = customMask.transform.GetChild(i).GetComponent<RectTransform>();
+            rt.localPosition = new Vector3(-500, rt.localPosition.y, rt.localPosition.z);
+        }
+        for (int i = 0; i < zenMask.transform.GetChild(0).childCount; i++)
+        {
+            rt = zenMask.transform.GetChild(0).GetChild(i).GetComponent<RectTransform>();
+            rt.localPosition = new Vector3(-500, rt.localPosition.y, rt.localPosition.z);
+        }
+        rt = zenMask.transform.GetChild(1).GetComponent<RectTransform>();
+        rt.localPosition = new Vector3(-500, rt.localPosition.y, rt.localPosition.z);
+    }
+
+    public IEnumerator AnimateStuff()
+    {
+        Debug.Log("asd");
+        Animator animator;
+        switch (PlayerPrefs.GetString("GameMode"))
+        {
+            case "Quick":
+                for (int i = 0; i < quickMask.transform.childCount; i++)
+                {
+                    animator = quickMask.transform.GetChild(i).GetComponent<Animator>();
+                    animator.SetTrigger("SlideIn");
+                    yield return new WaitForSeconds(animationDelay);
+                }
+                break;
+            case "Zen":
+                for (int i = 0; i < zenMask.transform.GetChild(0).childCount; i++)
+                {
+                    animator = zenMask.transform.GetChild(0).GetChild(i).GetComponent<Animator>();
+                    animator.SetTrigger("SlideIn");
+                    yield return new WaitForSeconds(animationDelay);
+                }
+                animator = zenMask.transform.GetChild(1).GetComponent<Animator>();
+                animator.SetTrigger("SlideIn");
+                break;
+            case "Custom":
+                for (int i = 0; i < customMask.transform.childCount; i++)
+                {
+                    animator = customMask.transform.GetChild(i).GetComponent<Animator>();
+                    animator.SetTrigger("SlideIn");
+                    yield return new WaitForSeconds(animationDelay);
+                }
+                break;
+        }
+        yield return null;
     }
 }
