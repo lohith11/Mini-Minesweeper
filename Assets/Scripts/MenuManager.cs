@@ -44,8 +44,10 @@ public class MenuManager : MonoBehaviour
 
     public void GameModeSelected(string gameMode)
     {
+
         if (gameMode == PlayerPrefs.GetString("GameMode") && gameMode == "Quick")
         {
+            AudioManager.audioManagerInstance.Play("Click");
             PlayerPrefs.SetInt("Quick.GridSize", Random.Range(20, 51));
             quickMask.transform.GetChild(0).GetComponent<TMP_Text>().text = "Grid Size: " + PlayerPrefs.GetInt("Quick.GridSize");
             quickMask.transform.GetChild(0).GetComponent<Animator>().SetTrigger("SlideIn");
