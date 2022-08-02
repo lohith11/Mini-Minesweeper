@@ -9,6 +9,8 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] Slider slider;
     [SerializeField] GameObject quickMask, customMask, zenMask;
+
+    [SerializeField] RectTransform content;
     [SerializeField] float animationDelay;
 
     void Start()
@@ -30,10 +32,28 @@ public class MenuManager : MonoBehaviour
 
             PlayerPrefs.SetString("GameMode", "Quick");
         }
+
+        PlayerPrefs.SetString("GameMode", "Unselected");
+    }
+
+    void Update()
+    {
+        float x = Mathf.Clamp(content.localPosition.x, -450f, 0f);
+        content.localPosition = new Vector3(x, content.localPosition.y, content.localPosition.z);
     }
 
     public void GameModeSelected(string gameMode)
     {
+        if (gameMode == PlayerPrefs.GetString("GameMode") && gameMode == "Quick")
+        {
+            PlayerPrefs.SetInt("Quick.GridSize", Random.Range(20, 51));
+            quickMask.transform.GetChild(0).GetComponent<TMP_Text>().text = "Grid Size: " + PlayerPrefs.GetInt("Quick.GridSize");
+            quickMask.transform.GetChild(0).GetComponent<Animator>().SetTrigger("SlideIn");
+        }
+
+        if (gameMode == PlayerPrefs.GetString("GameMode"))
+            return;
+
         ResePositions();
         PlayerPrefs.SetString("GameMode", gameMode);
         AudioManager.audioManagerInstance.Play("Click");
@@ -142,7 +162,6 @@ public class MenuManager : MonoBehaviour
 
     public IEnumerator AnimateStuff()
     {
-        Debug.Log("asd");
         Animator animator;
         switch (PlayerPrefs.GetString("GameMode"))
         {
