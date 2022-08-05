@@ -24,7 +24,7 @@ public class DragNShoot : MonoBehaviour
         if (rb.velocity.magnitude > minVelocity)
         {
             IsMoving = true;
-            rb.AddForce(-rb.velocity.normalized * airDrag);
+            rb.AddForce(-rb.velocity.normalized * airDrag * Time.deltaTime);
         }
         else
         {

@@ -4950,7 +4950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsMoving: 0
-  airDrag: 0.6
+  airDrag: 175
   maxPower: 5
   minVelocity: 0.1
   power: 5
