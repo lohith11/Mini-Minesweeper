@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         ball = Instantiate(ballPrefab, coordinates, Quaternion.identity);
         ballFollow.Follow = ball.transform;
         ballFollow.LookAt = ball.transform;
-        ball.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        ball.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
         FindObjectOfType<TrajectoryLine>().UpdateBallReference();
         LevelGeneration.levelGenerationInstance.PlaceFinishPoint(startCoordinates);
         LevelGeneration.levelGenerationInstance.SetTiles(masterLevel);

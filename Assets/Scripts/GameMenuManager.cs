@@ -9,7 +9,7 @@ public class GameMenuManager : MonoBehaviour
     {
         AudioManager.audioManagerInstance.Play("Click");
         if (GameManager.gameManagerInstance.gameStarted)
-            ballVelocity = FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().velocity;
+            ballVelocity = FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().linearVelocity;
         GameManager.gameManagerInstance.gamePaused = true;
         gameCanvas.SetActive(false);
         pauseCanvas.SetActive(true);
@@ -24,8 +24,8 @@ public class GameMenuManager : MonoBehaviour
         Time.timeScale = 1;
         if (GameManager.gameManagerInstance.gameStarted)
         {
-            FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().velocity = ballVelocity;
+            FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+            FindObjectOfType<DragNShoot>().gameObject.GetComponent<Rigidbody2D>().linearVelocity = ballVelocity;
         }
     }
     public void RestartGame()

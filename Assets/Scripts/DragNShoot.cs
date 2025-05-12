@@ -21,15 +21,15 @@ public class DragNShoot : MonoBehaviour
 
     void Update()
     {
-        if (rb.velocity.magnitude > minVelocity)
+        if (rb.linearVelocity.magnitude > minVelocity)
         {
             IsMoving = true;
-            rb.AddForce(-rb.velocity.normalized * airDrag * Time.deltaTime);
+            rb.AddForce(-rb.linearVelocity.normalized * airDrag * Time.deltaTime);
         }
         else
         {
             IsMoving = false;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
 
         if (!GameManager.gameManagerInstance.gameStarted || GameManager.gameManagerInstance.gameEnded || IsMoving)
@@ -61,7 +61,7 @@ public class DragNShoot : MonoBehaviour
         CellProperties cellProps;
         Vector3 particlePosition = other.transform.position + (transform.position - other.transform.position).normalized * (Vector3.Distance(transform.position, other.transform.position) / 2f);
 
-        if (other.gameObject.name == "Tile" && rb.velocity.magnitude > minBreakVelocity)
+        if (other.gameObject.name == "Tile" && rb.linearVelocity.magnitude > minBreakVelocity)
         {
             Instantiate(collisionParticlesTile, particlePosition, Quaternion.identity);
             cellProps = other.transform.parent.GetComponent<CellProperties>();
